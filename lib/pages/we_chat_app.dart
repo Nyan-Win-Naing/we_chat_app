@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/pages/contact_page.dart';
 import 'package:we_chat_app/pages/home_page.dart';
 import 'package:we_chat_app/pages/moment_page.dart';
+import 'package:we_chat_app/pages/profile_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
@@ -25,8 +27,7 @@ class _WeChatAppState extends State<WeChatApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // body: MomentPage(),
-      body: HomePage(),
+      body: getScreen(bottomNavIndex),
 
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -55,5 +56,17 @@ class _WeChatAppState extends State<WeChatApp> {
         unselectedItemColor: Color.fromRGBO(193,193,193, 1.0),
       ),
     );
+  }
+}
+
+Widget getScreen(int bottomNavIndex) {
+  if(bottomNavIndex == 0) {
+    return HomePage();
+  } else if(bottomNavIndex == 1) {
+    return ContactPage();
+  } else if(bottomNavIndex == 2) {
+    return MomentPage();
+  } else {
+    return ProfilePage();
   }
 }

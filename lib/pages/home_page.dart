@@ -162,7 +162,7 @@ class SubscriptionTitleView extends StatelessWidget {
   }
 }
 
-class ChatListView extends StatelessWidget {
+class ChatListView extends StatefulWidget {
   const ChatListView({
     Key? key,
     required this.avatarRadius,
@@ -171,13 +171,18 @@ class ChatListView extends StatelessWidget {
   final double avatarRadius;
 
   @override
+  State<ChatListView> createState() => _ChatListViewState();
+}
+
+class _ChatListViewState extends State<ChatListView> {
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: 4,
       itemBuilder: (context, index) {
-        return ConversationItemView(avatarRadius: avatarRadius);
+        return ConversationItemView(avatarRadius: widget.avatarRadius);
       },
     );
   }
