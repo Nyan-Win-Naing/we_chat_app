@@ -98,6 +98,11 @@ class CommentTextFieldView extends StatelessWidget {
                   top: 0,
                   bottom: MARGIN_SMALL,
                 ),
+                hintText: "Write a comment.....",
+                hintStyle: TextStyle(
+                  color: Color.fromRGBO(255, 255, 255, 0.5),
+                  fontSize: TEXT_REGULAR,
+                ),
               ),
             ),
           ),

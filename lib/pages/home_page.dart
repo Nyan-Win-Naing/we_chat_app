@@ -4,6 +4,7 @@ import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/conversation_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -187,7 +188,22 @@ class _ChatListViewState extends State<ChatListView> {
           onTap: () {
             _navigateToConversationPage(context);
           },
-          child: ConversationItemView(avatarRadius: widget.avatarRadius),
+          child: Slidable(
+            key: const ValueKey(0),
+            endActionPane: ActionPane(
+              motion: ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (_) {},
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+              ],
+            ),
+            child: ConversationItemView(avatarRadius: widget.avatarRadius),
+          ),
         );
       },
     );
