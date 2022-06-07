@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/EachProfileSectionItemView.dart';
-import 'package:we_chat_app/widgets/DividerWithHeightSix.dart';
+import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
 class ProfilePage extends StatelessWidget {
   @override

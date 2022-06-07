@@ -26,21 +26,26 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         centerTitle: true,
         leadingWidth: 260,
         elevation: 1,
-        leading: Row(
-          children: const [
-            Icon(
-              Icons.chevron_left,
-              color: Color.fromRGBO(255, 255, 255, 0.7),
-              size: MARGIN_XLARGE + 8,
-            ),
-            Text(
-              "WeChat",
-              style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 0.5),
-                fontSize: TEXT_REGULAR_2X,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Row(
+            children: const [
+              Icon(
+                Icons.chevron_left,
+                color: Color.fromRGBO(255, 255, 255, 0.7),
+                size: MARGIN_XLARGE + 8,
               ),
-            ),
-          ],
+              Text(
+                "WeChat",
+                style: TextStyle(
+                  color: Color.fromRGBO(255, 255, 255, 0.5),
+                  fontSize: TEXT_REGULAR_2X,
+                ),
+              ),
+            ],
+          ),
         ),
         title: const Text(
           "Amie Deane",
@@ -163,6 +168,7 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
               ChatTextFieldView(screenWidth: widget.screenWidth),
               GestureDetector(
                 onTap: () {
+                  FocusScope.of(context).unfocus();
                   isShown = !isShown;
                   widget.onTap();
                 },

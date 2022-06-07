@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
-class AddNewPost extends StatelessWidget {
+class AddNewPostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sHeight = MediaQuery.of(context).size.height;
@@ -11,20 +11,25 @@ class AddNewPost extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // backgroundColor: PRIMARY_COLOR,
-        backgroundColor: Colors.white,
+        backgroundColor: PRIMARY_COLOR,
+        // backgroundColor: Colors.white,
         elevation: 1,
         centerTitle: true,
         title: Text(
           "Create Post",
           style: TextStyle(
-            color: PRIMARY_COLOR,
+            color: Colors.white,
             fontSize: TEXT_REGULAR_2X,
           ),
         ),
-        leading: Icon(
-          Icons.clear_outlined,
-          color: Color.fromRGBO(0, 0, 0, 0.6),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.clear_outlined,
+            color: Color.fromRGBO(255, 255, 255, 0.6),
+          ),
         ),
         actions: [
           Padding(
@@ -35,14 +40,15 @@ class AddNewPost extends StatelessWidget {
               child: Text(
                 "Post",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: PRIMARY_COLOR,
                   fontWeight: FontWeight.w600,
                   fontSize: TEXT_REGULAR_2X,
                 ),
               ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromRGBO(33, 230, 88, 0.8)),
+                  Colors.white,
+                ),
               ),
             ),
           ),
@@ -82,12 +88,106 @@ class BottomSectionView extends StatefulWidget {
 }
 
 class _BottomSectionViewState extends State<BottomSectionView> {
-
   bool openBottomSheet = true;
 
   @override
   Widget build(BuildContext context) {
-    return (openBottomSheet) ? Container(
+    // return (openBottomSheet)
+    //     ? Container(
+    //         decoration: BoxDecoration(
+    //           color: Colors.white,
+    //           borderRadius: BorderRadius.only(
+    //             topLeft: Radius.circular(MARGIN_MEDIUM_3),
+    //             topRight: Radius.circular(MARGIN_MEDIUM_3),
+    //           ),
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: Color.fromRGBO(0, 0, 0, 0.1),
+    //               spreadRadius: 1,
+    //               blurRadius: 1,
+    //               offset: Offset(0, -1),
+    //             )
+    //           ],
+    //         ),
+    //         child: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             GestureDetector(
+    //               onTap: () {
+    //                 setState(() {
+    //                   openBottomSheet = !openBottomSheet;
+    //                 });
+    //               },
+    //               child: Icon(
+    //                 Icons.keyboard_arrow_down_outlined,
+    //                 color: Color.fromRGBO(0, 0, 0, 0.2),
+    //                 size: MARGIN_XLARGE,
+    //               ),
+    //             ),
+    //             Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               mainAxisSize: MainAxisSize.min,
+    //               children: [
+    //                 PostOptionItemView(
+    //                     icon: Icons.insert_photo_outlined,
+    //                     label: "Photo/video",
+    //                     color: Colors.green),
+    //                 PostOptionItemView(
+    //                     icon: Icons.person_pin_outlined,
+    //                     label: "Tag people",
+    //                     color: Colors.blue),
+    //                 PostOptionItemView(
+    //                     icon: Icons.emoji_emotions_outlined,
+    //                     label: "Feeling/activity",
+    //                     color: Colors.yellow),
+    //                 PostOptionItemView(
+    //                     icon: Icons.location_on_outlined,
+    //                     label: "Check in",
+    //                     color: Colors.red),
+    //                 PostOptionItemView(
+    //                     icon: Icons.video_camera_back,
+    //                     label: "Live video",
+    //                     color: Colors.redAccent),
+    //                 PostOptionItemView(
+    //                     icon: Icons.color_lens_rounded,
+    //                     label: "Background color",
+    //                     color: Colors.orangeAccent),
+    //               ],
+    //             )
+    //           ],
+    //         ),
+    //       )
+    //     : Container(
+    //         width: double.infinity,
+    //         decoration: BoxDecoration(
+    //           color: Colors.white,
+    //           borderRadius: BorderRadius.only(
+    //             topLeft: Radius.circular(MARGIN_MEDIUM_3),
+    //             topRight: Radius.circular(MARGIN_MEDIUM_3),
+    //           ),
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: Color.fromRGBO(0, 0, 0, 0.1),
+    //               spreadRadius: 1,
+    //               blurRadius: 1,
+    //               offset: Offset(0, -1),
+    //             )
+    //           ],
+    //         ),
+    //         child: GestureDetector(
+    //           onTap: () {
+    //             setState(() {
+    //               openBottomSheet = !openBottomSheet;
+    //             });
+    //           },
+    //           child: Icon(
+    //             Icons.keyboard_arrow_up_outlined,
+    //             color: Color.fromRGBO(33, 230, 88, 1.0),
+    //             size: MARGIN_XLARGE,
+    //           ),
+    //         ),
+    //       );
+    return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -113,53 +213,48 @@ class _BottomSectionViewState extends State<BottomSectionView> {
               });
             },
             child: Icon(
-              Icons.keyboard_arrow_down_outlined,
-              color: Color.fromRGBO(0, 0, 0, 0.2),
+              (openBottomSheet) ? Icons.keyboard_arrow_down_outlined : Icons.keyboard_arrow_up_outlined,
+              color: (openBottomSheet) ? Color.fromRGBO(0, 0, 0, 0.2) : PRIMARY_COLOR,
               size: MARGIN_XLARGE,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              PostOptionItemView(icon: Icons.insert_photo_outlined, label: "Photo/video", color: Colors.green),
-              PostOptionItemView(icon: Icons.person_pin_outlined, label: "Tag people", color: Colors.blue),
-              PostOptionItemView(icon: Icons.emoji_emotions_outlined, label: "Feeling/activity", color: Colors.yellow),
-              PostOptionItemView(icon: Icons.location_on_outlined , label: "Check in", color: Colors.red),
-              PostOptionItemView(icon: Icons.video_camera_back , label: "Live video", color: Colors.redAccent),
-              PostOptionItemView(icon: Icons.color_lens_rounded, label: "Background color", color: Colors.orangeAccent),
-            ],
+          AnimatedSize(
+            duration: Duration(milliseconds: 500),
+            child: Container(
+              height: (openBottomSheet) ? null : 0.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  PostOptionItemView(
+                      icon: Icons.insert_photo_outlined,
+                      label: "Photo/video",
+                      color: Colors.green),
+                  PostOptionItemView(
+                      icon: Icons.person_pin_outlined,
+                      label: "Tag people",
+                      color: Colors.blue),
+                  PostOptionItemView(
+                      icon: Icons.emoji_emotions_outlined,
+                      label: "Feeling/activity",
+                      color: Colors.yellow),
+                  PostOptionItemView(
+                      icon: Icons.location_on_outlined,
+                      label: "Check in",
+                      color: Colors.red),
+                  PostOptionItemView(
+                      icon: Icons.video_camera_back,
+                      label: "Live video",
+                      color: Colors.redAccent),
+                  PostOptionItemView(
+                      icon: Icons.color_lens_rounded,
+                      label: "Background color",
+                      color: Colors.orangeAccent),
+                ],
+              ),
+            ),
           )
         ],
-      ),
-    ) : Container(
-      width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(MARGIN_MEDIUM_3),
-            topRight: Radius.circular(MARGIN_MEDIUM_3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.1),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(0, -1),
-            )
-          ],
-        ),
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            openBottomSheet = !openBottomSheet;
-          });
-        },
-        child: Icon(
-          Icons.keyboard_arrow_up_outlined,
-          color: Color.fromRGBO(33,230,88, 1.0),
-          size: MARGIN_XLARGE,
-        ),
       ),
     );
   }

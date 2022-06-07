@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/pages/add_new_post_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/post_item_view.dart';
-import 'package:we_chat_app/widgets/DividerWithHeightSix.dart';
+import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
 class MomentPage extends StatelessWidget {
   @override
@@ -47,10 +48,15 @@ class MomentPage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-            child: Icon(
-              Icons.camera_alt_outlined,
-              color: Color.fromRGBO(255, 255, 255, 0.7),
-              size: MARGIN_LARGE,
+            child: GestureDetector(
+              onTap: () {
+                _navigateToAddNewPostPage(context);
+              },
+              child: Icon(
+                Icons.camera_alt_outlined,
+                color: Color.fromRGBO(255, 255, 255, 0.7),
+                size: MARGIN_LARGE,
+              ),
             ),
           ),
         ],
@@ -74,8 +80,16 @@ class MomentPage extends StatelessWidget {
       ),
     );
   }
-}
 
+  void _navigateToAddNewPostPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddNewPostPage(),
+      ),
+    );
+  }
+}
 
 class MomentPageProfileSectionView extends StatelessWidget {
   const MomentPageProfileSectionView({

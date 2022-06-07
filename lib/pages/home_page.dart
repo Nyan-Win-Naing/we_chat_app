@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/conversation_item_view.dart';
-import 'package:we_chat_app/widgets/DividerWithHeightSix.dart';
+import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -182,8 +183,22 @@ class _ChatListViewState extends State<ChatListView> {
       shrinkWrap: true,
       itemCount: 4,
       itemBuilder: (context, index) {
-        return ConversationItemView(avatarRadius: widget.avatarRadius);
+        return GestureDetector(
+          onTap: () {
+            _navigateToConversationPage(context);
+          },
+          child: ConversationItemView(avatarRadius: widget.avatarRadius),
+        );
       },
+    );
+  }
+
+  void _navigateToConversationPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatRoomPage(),
+      ),
     );
   }
 }

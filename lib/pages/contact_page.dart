@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/contact_item_view.dart';
-import 'package:we_chat_app/widgets/DividerWithHeightSix.dart';
+import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
 class ContactPage extends StatelessWidget {
   List<dynamic> alphabetList = [

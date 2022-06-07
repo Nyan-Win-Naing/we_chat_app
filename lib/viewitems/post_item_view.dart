@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:we_chat_app/resources/dimens.dart';
-import 'package:we_chat_app/widgets/DividerWithHeightSix.dart';
+import 'package:we_chat_app/widgets/divider_with_height_six.dart';
+import 'package:we_chat_app/widgets/overlay_for_comment_section_view.dart';
+import 'package:we_chat_app/widgets/overlay_for_post_detail_section_view.dart';
 
 class PostItemView extends StatelessWidget {
   const PostItemView({
@@ -18,9 +22,19 @@ class PostItemView extends StatelessWidget {
           height: 80,
           child: PostHeaderSectionView(avatarRadius: avatarRadius),
         ),
-        PostDescriptionView(),
+        GestureDetector(
+          onTap: () {
+            insertOverlayForPostDetail(context);
+          },
+          child: PostDescriptionView(),
+        ),
         SizedBox(height: MARGIN_MEDIUM_2),
-        PostImageView(),
+        GestureDetector(
+          onTap: () {
+            insertOverlayForPostDetail(context);
+          },
+          child: PostImageView(),
+        ),
         SizedBox(height: MARGIN_MEDIUM_2),
         PostReactionsSectionView(),
         SizedBox(height: MARGIN_MEDIUM),
@@ -148,10 +162,6 @@ class PostImageView extends StatelessWidget {
 }
 
 class PostReactionsSectionView extends StatelessWidget {
-  const PostReactionsSectionView({
-    Key? key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -161,7 +171,12 @@ class PostReactionsSectionView extends StatelessWidget {
         children: [
           PostReationIconView(iconData: Icons.favorite_border),
           SizedBox(width: MARGIN_CARD_MEDIUM_2),
-          PostReationIconView(iconData: Icons.comment_outlined),
+          GestureDetector(
+            onTap: () {
+              insertOverlayForComment(context);
+            },
+            child: PostReationIconView(iconData: Icons.comment_outlined),
+          ),
           SizedBox(width: MARGIN_CARD_MEDIUM_2),
           PostReationIconView(iconData: Icons.more_horiz_outlined),
         ],
@@ -243,7 +258,6 @@ class PostReationIconView extends StatelessWidget {
   }
 }
 
-
 class LastCommentSectionView extends StatelessWidget {
   const LastCommentSectionView({
     Key? key,
@@ -272,7 +286,7 @@ class LastCommentSectionView extends StatelessWidget {
               children: [
                 TextSpan(
                   text:
-                  "Dinosaurs are a group of reptiles that dominated the land for over 140 million years (more than 160 million years in some parts of the world).",
+                      "Dinosaurs are a group of reptiles that dominated the land for over 140 million years (more than 160 million years in some parts of the world).",
                   style: TextStyle(
                     color: Color.fromRGBO(0, 0, 0, 0.4),
                     fontWeight: FontWeight.w400,
