@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:we_chat_app/data/models/wechat_model.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/network/cloud_firestore_data_agent_impl.dart';
@@ -61,11 +62,30 @@ class WechatModelImpl extends WechatModel {
 
   @override
   Future<void> editPost(MomentVO moment, File? imageFile, File? videoFile) {
-    return mDataAgent.addNewMoment(moment);
+    if(imageFile != null) {
+      return mDataAgent
+          .uploadFileToFirebase(imageFile)
+          .then((downloadUrl) => editMomentVO(moment, downloadUrl, ""))
+          .then((moment) => mDataAgent.addNewMoment(moment));
+    } else if(videoFile != null) {
+      return mDataAgent
+          .uploadFileToFirebase(videoFile)
+          .then((downloadUrl) => editMomentVO(moment, "", downloadUrl))
+          .then((moment) => mDataAgent.addNewMoment(moment));
+    } else {
+      return editMomentVO(moment, "", "")
+          .then((moment) => mDataAgent.addNewMoment(moment));
+    }
   }
 
   @override
   Stream<MomentVO> getMomentById(int momentId) {
     return mDataAgent.getMomentById(momentId);
+  }
+
+  Future<MomentVO> editMomentVO(MomentVO moment, String imageUrl, String videoUrl) {
+    moment.postImage = imageUrl;
+    moment.postVideo = videoUrl;
+    return Future.value(moment);
   }
 }

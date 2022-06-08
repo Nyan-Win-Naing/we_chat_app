@@ -403,22 +403,22 @@ class _PostDescriptionAndImageSectionViewState
             ),
             Builder(
               builder: (context) {
-                if (bloc.chosenImageFile != null) {
+                if (bloc.chosenImageFile != null || bloc.networkImage.isNotEmpty) {
                   return Stack(
                     children: [
-                      Image.file(
+                      (bloc.chosenImageFile != null) ? Image.file(
                         bloc.chosenImageFile ?? File(""),
                         fit: BoxFit.cover,
                         width: double.infinity,
-                      ),
+                      ) : Image.network(bloc.networkImage, fit: BoxFit.cover, width: double.infinity,),
                       ChosenFileRemover(bloc: bloc),
                     ],
                   );
-                } else if (bloc.chosenVideoFile != null) {
-                  flickManager = FlickManager(
+                } else if (bloc.chosenVideoFile != null || bloc.networkVideo.isNotEmpty) {
+                  flickManager = (bloc.chosenVideoFile != null) ? FlickManager(
                     videoPlayerController: VideoPlayerController.file(
                         bloc.chosenVideoFile ?? File("")),
-                  );
+                  ) : FlickManager(videoPlayerController: VideoPlayerController.network(bloc.networkVideo));
                   return Stack(
                     children: [
                       FlickVideoPlayer(

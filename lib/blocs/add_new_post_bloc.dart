@@ -26,6 +26,9 @@ class AddNewPostBloc extends ChangeNotifier {
   /// For Edit Mode
   bool isInEditMode = false;
   MomentVO? mMoment;
+  String networkImage = "";
+  String networkVideo = "";
+
 
   AddNewPostBloc({int? momentId}) {
     if (momentId != null) {
@@ -82,6 +85,8 @@ class AddNewPostBloc extends ChangeNotifier {
       username = moment.userName ?? "";
       profilePicture = moment.profilePicture ?? "";
       newPostDescription = moment.description ?? "";
+      networkImage = moment.postImage ?? "";
+      networkVideo = moment.postVideo ?? "";
       mMoment = moment;
       _notifySafely();
     });
@@ -114,6 +119,8 @@ class AddNewPostBloc extends ChangeNotifier {
   void onTapDeleteFile() {
     chosenImageFile = null;
     chosenVideoFile = null;
+    networkImage = "";
+    networkVideo = "";
     _notifySafely();
   }
 }
