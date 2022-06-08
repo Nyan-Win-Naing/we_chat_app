@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:we_chat_app/blocs/moments_bloc.dart';
+import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/pages/add_new_post_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
@@ -11,70 +14,89 @@ class MomentPage extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final avatarRadius = screenHeight / 30;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: PRIMARY_COLOR,
-        automaticallyImplyLeading: false,
-        leadingWidth: 260,
-        centerTitle: true,
-        elevation: 1,
-        title: Text(
-          "Moments",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: TEXT_REGULAR_2X,
-          ),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.chevron_left,
-                color: Color.fromRGBO(255, 255, 255, 0.7),
-                size: MARGIN_XLARGE + 8,
-              ),
-              Text(
-                "Discover",
-                style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 0.5),
-                  fontSize: TEXT_REGULAR_2X,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-            child: GestureDetector(
-              onTap: () {
-                _navigateToAddNewPostPage(context);
-              },
-              child: Icon(
-                Icons.camera_alt_outlined,
-                color: Color.fromRGBO(255, 255, 255, 0.7),
-                size: MARGIN_LARGE,
-              ),
+    return ChangeNotifierProvider(
+      create: (context) => MomentsBloc(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          automaticallyImplyLeading: false,
+          leadingWidth: 260,
+          centerTitle: true,
+          elevation: 1,
+          title: Text(
+            "Moments",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: TEXT_REGULAR_2X,
             ),
           ),
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MomentPageProfileSectionView(),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return PostItemView(avatarRadius: avatarRadius);
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.chevron_left,
+                  color: Color.fromRGBO(255, 255, 255, 0.7),
+                  size: MARGIN_XLARGE + 8,
+                ),
+                Text(
+                  "Discover",
+                  style: TextStyle(
+                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                    fontSize: TEXT_REGULAR_2X,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+              child: GestureDetector(
+                onTap: () {
+                  _navigateToAddNewPostPage(context);
                 },
+                child: Icon(
+                  Icons.camera_alt_outlined,
+                  color: Color.fromRGBO(255, 255, 255, 0.7),
+                  size: MARGIN_LARGE,
+                ),
               ),
-            ],
+            ),
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MomentPageProfileSectionView(),
+                Selector<MomentsBloc, List<MomentVO>>(
+                  selector: (context, bloc) => bloc.moments ?? [],
+                  builder: (context, moments, child) => ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: moments.length,
+                    itemBuilder: (context, index) {
+                      MomentsBloc bloc = Provider.of(context, listen: false);
+                      return PostItemView(
+                        avatarRadius: avatarRadius,
+                        momentVo: moments[index],
+                        onTapDelete: (momentId) {
+                          bloc.onTapDeletePost(momentId);
+                        },
+                        onTapEdit: (momentId) {
+                          Future.delayed(Duration(milliseconds: 1000))
+                              .then((value) {
+                            _navigateToEditPostPage(context, momentId);
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -86,6 +108,17 @@ class MomentPage extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => AddNewPostPage(),
+      ),
+    );
+  }
+
+  void _navigateToEditPostPage(BuildContext context, int momentId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddNewPostPage(
+          momentId: momentId,
+        ),
       ),
     );
   }

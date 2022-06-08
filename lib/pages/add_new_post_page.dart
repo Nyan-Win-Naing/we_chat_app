@@ -1,76 +1,119 @@
+import 'dart:io';
+
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
+import 'package:we_chat_app/blocs/add_new_post_bloc.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:we_chat_app/widgets/loading_view.dart';
 
 class AddNewPostPage extends StatelessWidget {
+  final int? momentId;
+
+  AddNewPostPage({this.momentId});
+
   @override
   Widget build(BuildContext context) {
     final sHeight = MediaQuery.of(context).size.height;
     final avatarRadius = sHeight / 30;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: PRIMARY_COLOR,
-        // backgroundColor: Colors.white,
-        elevation: 1,
-        centerTitle: true,
-        title: Text(
-          "Create Post",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: TEXT_REGULAR_2X,
-          ),
-        ),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.clear_outlined,
-            color: Color.fromRGBO(255, 255, 255, 0.6),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: MARGIN_MEDIUM_2, vertical: MARGIN_CARD_MEDIUM_2),
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Post",
-                style: TextStyle(
-                  color: PRIMARY_COLOR,
-                  fontWeight: FontWeight.w600,
-                  fontSize: TEXT_REGULAR_2X,
-                ),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Container(
-        child: Stack(
+    return ChangeNotifierProvider(
+      create: (context) => AddNewPostBloc(momentId: momentId),
+      child: Selector<AddNewPostBloc, bool>(
+        selector: (context, bloc) => bloc.isLoading,
+        builder: (context, isLoading, child) => Stack(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: MARGIN_CARD_MEDIUM_2),
-                  ProfileAndPostMethodsSectionView(avatarRadius: avatarRadius),
-                  SizedBox(height: MARGIN_MEDIUM),
-                  PostDescriptionAndImageSectionView(),
+            Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: PRIMARY_COLOR,
+                // backgroundColor: Colors.white,
+                elevation: 1,
+                centerTitle: true,
+                title: Text(
+                  "Create Post",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: TEXT_REGULAR_2X,
+                  ),
+                ),
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.clear_outlined,
+                    color: Color.fromRGBO(255, 255, 255, 0.6),
+                  ),
+                ),
+                actions: [
+                  Consumer<AddNewPostBloc>(
+                    builder: (context, bloc, child) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: MARGIN_MEDIUM_2,
+                          vertical: MARGIN_CARD_MEDIUM_2),
+                      child: TextButton(
+                        onPressed: () {
+                          bloc.onTapAddNewPost().then((value) {
+                            Navigator.pop(context);
+                          }).catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Your post is empty, write something....")));
+                          });
+                        },
+                        child: Text(
+                          "Post",
+                          style: TextStyle(
+                            color: PRIMARY_COLOR,
+                            fontWeight: FontWeight.w600,
+                            fontSize: TEXT_REGULAR_2X,
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
+              body: Container(
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(height: MARGIN_CARD_MEDIUM_2),
+                          ProfileAndPostMethodsSectionView(
+                              avatarRadius: avatarRadius),
+                          SizedBox(height: MARGIN_MEDIUM),
+                          PostDescriptionAndImageSectionView(),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: BottomSectionView(),
+                    )
+                  ],
+                ),
+              ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BottomSectionView(),
-            )
+            Visibility(
+              visible: isLoading,
+              child: Container(
+                color: Colors.black12,
+                child: const Center(
+                  child: LoadingView(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -213,8 +256,12 @@ class _BottomSectionViewState extends State<BottomSectionView> {
               });
             },
             child: Icon(
-              (openBottomSheet) ? Icons.keyboard_arrow_down_outlined : Icons.keyboard_arrow_up_outlined,
-              color: (openBottomSheet) ? Color.fromRGBO(0, 0, 0, 0.2) : PRIMARY_COLOR,
+              (openBottomSheet)
+                  ? Icons.keyboard_arrow_down_outlined
+                  : Icons.keyboard_arrow_up_outlined,
+              color: (openBottomSheet)
+                  ? Color.fromRGBO(0, 0, 0, 0.2)
+                  : PRIMARY_COLOR,
               size: MARGIN_XLARGE,
             ),
           ),
@@ -226,10 +273,25 @@ class _BottomSectionViewState extends State<BottomSectionView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  PostOptionItemView(
-                      icon: Icons.insert_photo_outlined,
-                      label: "Photo/video",
-                      color: Colors.green),
+                  Consumer<AddNewPostBloc>(
+                    builder: (context, bloc, child) {
+                      return GestureDetector(
+                        onTap: () async {
+                          final FilePickerResult? result =
+                              await FilePicker.platform.pickFiles();
+                          if (result != null) {
+                            File file = File(result.files.single.path ?? "");
+                            print(file.path);
+                            bloc.onFileChosen(file);
+                          }
+                        },
+                        child: PostOptionItemView(
+                            icon: Icons.insert_photo_outlined,
+                            label: "Photo/video",
+                            color: Colors.green),
+                      );
+                    },
+                  ),
                   PostOptionItemView(
                       icon: Icons.person_pin_outlined,
                       label: "Tag people",
@@ -293,50 +355,113 @@ class PostOptionItemView extends StatelessWidget {
   }
 }
 
-class PostDescriptionAndImageSectionView extends StatelessWidget {
+class PostDescriptionAndImageSectionView extends StatefulWidget {
   const PostDescriptionAndImageSectionView({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<PostDescriptionAndImageSectionView> createState() =>
+      _PostDescriptionAndImageSectionViewState();
+}
+
+class _PostDescriptionAndImageSectionViewState
+    extends State<PostDescriptionAndImageSectionView> {
+  FlickManager? flickManager;
+
+  @override
+  void dispose() {
+    if(flickManager != null) {
+      flickManager?.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
-      // color: Colors.blue,
-      child: Column(
-        children: [
-          TextField(
-            minLines: 1,
-            maxLines: 10,
-            decoration: InputDecoration(
+    return Consumer<AddNewPostBloc>(
+      builder: (context, bloc, child) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
+        // color: Colors.blue,
+        child: Column(
+          children: [
+            TextField(
+              minLines: 1,
+              maxLines: 10,
+              controller: TextEditingController(text: bloc.newPostDescription),
+              onChanged: (text) {
+                bloc.onNewPostTextChanged(text);
+              },
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "What's on your mind?",
                 hintStyle: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 0.3),
                   fontWeight: FontWeight.w400,
-                )),
-          ),
-          Stack(
-            children: [
-              Image.network(
-                // "https://www.remotelands.com/travelogues/app/uploads/2019/04/Pyin-Oo-Lwin-header.jpg",
-                "https://i.stack.imgur.com/5MSZ1.jpg",
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: MARGIN_MEDIUM, top: MARGIN_MEDIUM),
-                  child: Icon(
-                    Icons.close,
-                    color: Color.fromRGBO(255, 255, 255, 0.5),
-                    size: MARGIN_MEDIUM_3,
-                  ),
                 ),
-              )
-            ],
+              ),
+            ),
+            Builder(
+              builder: (context) {
+                if (bloc.chosenImageFile != null) {
+                  return Stack(
+                    children: [
+                      Image.file(
+                        bloc.chosenImageFile ?? File(""),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                      ChosenFileRemover(bloc: bloc),
+                    ],
+                  );
+                } else if (bloc.chosenVideoFile != null) {
+                  flickManager = FlickManager(
+                    videoPlayerController: VideoPlayerController.file(
+                        bloc.chosenVideoFile ?? File("")),
+                  );
+                  return Stack(
+                    children: [
+                      FlickVideoPlayer(
+                        flickManager: flickManager!,
+                      ),
+                      ChosenFileRemover(bloc: bloc),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ChosenFileRemover extends StatelessWidget {
+  final AddNewPostBloc bloc;
+
+  ChosenFileRemover({required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        bloc.onTapDeleteFile();
+      },
+      child: Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding:
+              const EdgeInsets.only(right: MARGIN_MEDIUM, top: MARGIN_MEDIUM),
+          child: Icon(
+            Icons.close,
+            color: Color.fromRGBO(255, 255, 255, 0.5),
+            // color: Colors.redAccent,
+            size: MARGIN_MEDIUM_3,
           ),
-        ],
+        ),
       ),
     );
   }
@@ -352,40 +477,44 @@ class ProfileAndPostMethodsSectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: avatarRadius,
-            backgroundImage: NetworkImage(
-              "https://data.whicdn.com/images/339581930/original.jpg",
-            ),
-          ),
-          SizedBox(width: MARGIN_MEDIUM),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Alberto Calvo",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+    return Consumer<AddNewPostBloc>(
+      builder: (context, bloc, child) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: avatarRadius,
+              backgroundImage: NetworkImage(
+                (bloc.profilePicture != "")
+                    ? bloc.profilePicture
+                    : "https://static.vecteezy.com/system/resources/previews/002/534/006/original/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg",
               ),
-              SizedBox(height: MARGIN_MEDIUM),
-              Row(
-                children: [
-                  PostMethodItemView(iconData: Icons.public, label: "Public"),
-                  SizedBox(width: MARGIN_SMALL),
-                  PostMethodItemView(iconData: Icons.add, label: "Album"),
-                  SizedBox(width: MARGIN_SMALL),
-                  PostMethodItemView(iconData: Icons.facebook, label: "Off"),
-                ],
-              )
-            ],
-          )
-        ],
+            ),
+            SizedBox(width: MARGIN_MEDIUM),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  bloc.username,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: MARGIN_MEDIUM),
+                Row(
+                  children: [
+                    PostMethodItemView(iconData: Icons.public, label: "Public"),
+                    SizedBox(width: MARGIN_SMALL),
+                    PostMethodItemView(iconData: Icons.add, label: "Album"),
+                    SizedBox(width: MARGIN_SMALL),
+                    PostMethodItemView(iconData: Icons.facebook, label: "Off"),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

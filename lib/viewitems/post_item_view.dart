@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 import 'package:we_chat_app/widgets/overlay_for_comment_section_view.dart';
@@ -10,9 +13,15 @@ class PostItemView extends StatelessWidget {
   const PostItemView({
     Key? key,
     required this.avatarRadius,
+    required this.momentVo,
+    required this.onTapDelete,
+    required this.onTapEdit,
   }) : super(key: key);
 
   final double avatarRadius;
+  final MomentVO? momentVo;
+  final Function(int) onTapDelete;
+  final Function(int) onTapEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +29,46 @@ class PostItemView extends StatelessWidget {
       children: [
         Container(
           height: 80,
-          child: PostHeaderSectionView(avatarRadius: avatarRadius),
+          child: PostHeaderSectionView(
+            avatarRadius: avatarRadius,
+            profileImage: momentVo?.profilePicture ?? "",
+            username: momentVo?.userName ?? "",
+          ),
         ),
         GestureDetector(
           onTap: () {
             insertOverlayForPostDetail(context);
           },
-          child: PostDescriptionView(),
+          child: PostDescriptionView(description: momentVo?.description ?? ""),
         ),
         SizedBox(height: MARGIN_MEDIUM_2),
-        GestureDetector(
-          onTap: () {
-            insertOverlayForPostDetail(context);
+        Visibility(
+          visible: (momentVo?.postImage ?? "").isNotEmpty,
+          child: GestureDetector(
+            onTap: () {
+              insertOverlayForPostDetail(context);
+            },
+            child: PostImageView(postImage: momentVo?.postImage ?? ""),
+          ),
+        ),
+        Visibility(
+          visible: (momentVo?.postVideo ?? "").isNotEmpty,
+          child: GestureDetector(
+            onTap: () {
+              insertOverlayForPostDetail(context);
+            },
+            child: PostVideoView(postVideo: momentVo?.postVideo ?? ""),
+          ),
+        ),
+        SizedBox(height: MARGIN_MEDIUM_2),
+        PostReactionsSectionView(
+          onTapDelete: () {
+            onTapDelete(momentVo?.id ?? 0);
           },
-          child: PostImageView(),
+          onTapEdit: () {
+            onTapEdit(momentVo?.id ?? 0);
+          },
         ),
-        SizedBox(height: MARGIN_MEDIUM_2),
-        PostReactionsSectionView(),
         SizedBox(height: MARGIN_MEDIUM),
         DividerWithHeightSix(),
         ReactorsAndCommentsView(),
@@ -49,9 +81,13 @@ class PostHeaderSectionView extends StatelessWidget {
   const PostHeaderSectionView({
     Key? key,
     required this.avatarRadius,
+    required this.profileImage,
+    required this.username,
   }) : super(key: key);
 
   final double avatarRadius;
+  final String profileImage;
+  final String username;
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +123,12 @@ class PostHeaderSectionView extends StatelessWidget {
                     CircleAvatar(
                       radius: avatarRadius,
                       backgroundImage: NetworkImage(
-                        "http://www.asianjunkie.com/wp-content/uploads/2017/03/GirlsDayIllBeYoursYura.jpg",
+                        profileImage,
                       ),
                     ),
                     SizedBox(width: MARGIN_CARD_MEDIUM_2),
                     Text(
-                      "Lieven Deprez",
+                      username,
                       style: TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         fontWeight: FontWeight.bold,
@@ -118,9 +154,9 @@ class PostHeaderSectionView extends StatelessWidget {
 }
 
 class PostDescriptionView extends StatelessWidget {
-  const PostDescriptionView({
-    Key? key,
-  }) : super(key: key);
+  final String description;
+
+  PostDescriptionView({required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +164,7 @@ class PostDescriptionView extends StatelessWidget {
       padding: EdgeInsets.only(
           left: POST_DESCRIPTION_LEFT_MARGIN, right: MARGIN_CARD_MEDIUM_2),
       child: Text(
-        "Dinosaurs are a diverse group of reptiles of the clade Dinosauria. They first appeared during the Triassic period, between 243 and 233.23 million years ago, although the exact origin and timing of the evolution of dinosaurs is the subject of active research.",
+        description,
         style: TextStyle(
           color: Color.fromRGBO(0, 0, 0, 0.4),
         ),
@@ -138,30 +174,74 @@ class PostDescriptionView extends StatelessWidget {
 }
 
 class PostImageView extends StatelessWidget {
-  const PostImageView({
-    Key? key,
-  }) : super(key: key);
+  final String postImage;
+
+  PostImageView({required this.postImage});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: MARGIN_CARD_MEDIUM_2),
-      height: 270,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
-        // color: Colors.blue,
-        image: DecorationImage(
-          image: NetworkImage(
-            "https://assets.londonist.com/uploads/2016/09/i875/dinos.jpg",
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(MARGIN_CARD_MEDIUM_2),
+        child: FadeInImage(
+          height: 270,
+          width: double.infinity,
+          placeholder: NetworkImage(
+            "https://t3.ftcdn.net/jpg/04/34/72/82/360_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg",
           ),
-          fit: BoxFit.cover,
+          image: NetworkImage(
+            postImage,
+          ),
+          fit: BoxFit.fill,
         ),
       ),
     );
   }
 }
 
+class PostVideoView extends StatefulWidget {
+  final String postVideo;
+
+  PostVideoView({required this.postVideo});
+
+  @override
+  State<PostVideoView> createState() => _PostVideoViewState();
+}
+
+class _PostVideoViewState extends State<PostVideoView> {
+  late FlickManager flickManager;
+  @override
+  void initState() {
+    super.initState();
+    flickManager = FlickManager(
+      videoPlayerController:
+      VideoPlayerController.network(widget.postVideo),
+    );
+  }
+
+  @override
+  void dispose() {
+    flickManager.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: MARGIN_CARD_MEDIUM_2),
+      child: FlickVideoPlayer(flickManager: flickManager),
+    );
+  }
+}
+
 class PostReactionsSectionView extends StatelessWidget {
+  final Function onTapDelete;
+  final Function onTapEdit;
+
+  PostReactionsSectionView(
+      {required this.onTapDelete, required this.onTapEdit});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -178,9 +258,46 @@ class PostReactionsSectionView extends StatelessWidget {
             child: PostReationIconView(iconData: Icons.comment_outlined),
           ),
           SizedBox(width: MARGIN_CARD_MEDIUM_2),
-          PostReationIconView(iconData: Icons.more_horiz_outlined),
+          MoreButtonView(
+            onTapDelete: () {
+              onTapDelete();
+            },
+            onTapEdit: () {
+              onTapEdit();
+            },
+          ),
         ],
       ),
+    );
+  }
+}
+
+class MoreButtonView extends StatelessWidget {
+  final Function onTapDelete;
+  final Function onTapEdit;
+
+  MoreButtonView({required this.onTapDelete, required this.onTapEdit});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      icon: PostReationIconView(iconData: Icons.more_horiz_outlined),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          onTap: () {
+            onTapEdit();
+          },
+          child: Text("Edit"),
+          value: 1,
+        ),
+        PopupMenuItem(
+          onTap: () {
+            onTapDelete();
+          },
+          child: Text("Delete"),
+          value: 2,
+        ),
+      ],
     );
   }
 }

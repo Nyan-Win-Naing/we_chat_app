@@ -69,6 +69,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         children: [
           Positioned.fill(
             child: ListView.separated(
+              // reverse: true,
               padding: EdgeInsets.only(
                 top: MARGIN_MEDIUM_2,
                 bottom: (!isOpenFunctionView) ? MARGIN_3XLARGE : 250,
