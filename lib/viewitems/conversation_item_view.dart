@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/dummy/chat_vo.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 class ConversationItemView extends StatelessWidget {
   const ConversationItemView({
     Key? key,
     required this.avatarRadius,
+    required this.chatVo,
   }) : super(key: key);
 
   final double avatarRadius;
+  final ChatVO chatVo;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,8 @@ class ConversationItemView extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    "https://cutewallpaper.org/21/boy-profile-pic/198+-Cute-Boy-Profile-Images-Pictures-Wallpaper-For-Whatsapp-DP.jpg",
+                  backgroundImage: NetworkImage(
+                    chatVo.profile ?? "",
                   ),
                 ),
                 SizedBox(width: MARGIN_MEDIUM),
@@ -40,7 +43,7 @@ class ConversationItemView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Ame Deane",
+                            chatVo.name ?? "",
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: TEXT_REGULAR_2X,
@@ -58,7 +61,7 @@ class ConversationItemView extends StatelessWidget {
                       ),
                       SizedBox(height: MARGIN_MEDIUM),
                       Text(
-                        "IMAX is a proprietary system of high-resolution cameras, film formats.",
+                        chatVo.lastConversationText ?? "",
                         maxLines: 2,
                         style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.4),

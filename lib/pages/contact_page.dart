@@ -1,40 +1,19 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/dummy/dummy_data_for_contact_page.dart';
+import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/viewitems/contact_item_by_alphabet.dart';
 import 'package:we_chat_app/viewitems/contact_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
 class ContactPage extends StatelessWidget {
-  List<dynamic> alphabetList = [
-    Icons.search,
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-    "#"
-  ];
+  List<dynamic> alphabetList = List.of(alphabetsStartByName);
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final avatarRadius = screenHeight / 25;
-
+    alphabetList.insert(0, (Icons.search));
+    alphabetList.add("#");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
@@ -76,17 +55,12 @@ class ContactPage extends StatelessWidget {
                   ContactFunctionsView(),
                   SizedBox(height: MARGIN_MEDIUM_2),
                   DividerWithHeightSix(),
-                  AlphatbetAndTotalFriendsSectionView(),
-                  Container(
-                    color: Color.fromRGBO(0, 0, 0, 0.05),
-                    height: 1.5,
-                  ),
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 10,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: alphabetsStartByName.length,
                     itemBuilder: (context, index) {
-                      return ContactItemView(avatarRadius: avatarRadius);
+                      return ContactItemByAlphabet(alphabet: alphabetsStartByName[index]);
                     },
                   ),
                 ],
@@ -105,62 +79,17 @@ class ContactPage extends StatelessWidget {
                               size: MARGIN_MEDIUM_2,
                             )
                           : Container(
-                        margin: EdgeInsets.only(bottom: 2),
-                            child: Text(
-                                e, style: TextStyle(
-                        color: Color.fromRGBO(91, 91, 91, 1.0),
-                        fontSize: TEXT_REGULAR - 2,
-                        fontWeight: FontWeight.w700
-                      ),
+                              margin: EdgeInsets.only(bottom: 2),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                    color: Color.fromRGBO(91, 91, 91, 1.0),
+                                    fontSize: TEXT_REGULAR - 2,
+                                    fontWeight: FontWeight.w700),
                               ),
-                          ),
+                            ),
                     )
                     .toList(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AlphatbetAndTotalFriendsSectionView extends StatelessWidget {
-  const AlphatbetAndTotalFriendsSectionView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      color: Color.fromRGBO(242, 242, 242, 1.0),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: MARGIN_XXLARGE + 20,
-          right: MARGIN_XLARGE,
-          bottom: MARGIN_SMALL,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "A",
-              style: TextStyle(
-                color: Color.fromRGBO(155, 155, 155, 1.0),
-                fontSize: TEXT_BIG,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: MARGIN_SMALL),
-              child: Text(
-                "15 FRIENDS",
-                style: TextStyle(
-                  color: Color.fromRGBO(0, 0, 0, 0.15),
-                  fontSize: TEXT_REGULAR_2X,
-                ),
               ),
             ),
           ],

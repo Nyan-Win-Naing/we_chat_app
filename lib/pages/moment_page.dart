@@ -58,7 +58,7 @@ class MomentPage extends StatelessWidget {
                   _navigateToAddNewPostPage(context);
                 },
                 child: Icon(
-                  Icons.camera_alt_outlined,
+                  Icons.add_a_photo_outlined,
                   color: Color.fromRGBO(255, 255, 255, 0.7),
                   size: MARGIN_LARGE,
                 ),

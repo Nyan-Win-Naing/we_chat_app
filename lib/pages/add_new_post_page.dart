@@ -34,7 +34,7 @@ class AddNewPostPage extends StatelessWidget {
                 elevation: 1,
                 centerTitle: true,
                 title: Text(
-                  "Create Post",
+                  (momentId == null) ? "Create Post" : "Edit Post",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,

@@ -1,12 +1,14 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 late OverlayEntry overlayEntryForPostDetail;
 
-void insertOverlayForPostDetail(BuildContext context) {
+void insertOverlayForPostDetail(BuildContext context, MomentVO moment) {
   overlayEntryForPostDetail = OverlayEntry(
     builder: (context) {
       return BackdropFilter(
@@ -20,11 +22,18 @@ void insertOverlayForPostDetail(BuildContext context) {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PosterNameView(),
+                    PosterNameView(userName: moment.userName ?? ""),
                     SizedBox(height: MARGIN_MEDIUM_2),
-                    PostDescriptionView(),
+                    PostDescriptionView(description: moment.description ?? ""),
                     SizedBox(height: MARGIN_MEDIUM_2),
-                    PostImageView(),
+                    Visibility(
+                      visible: (moment.postImage ?? "").isNotEmpty,
+                      child: PostImageView(postImage: moment.postImage ?? ""),
+                    ),
+                    Visibility(
+                      visible: (moment.postVideo ?? "").isNotEmpty,
+                      child: PostVideoView(postVideo: moment.postVideo ?? ""),
+                    ),
                     SizedBox(height: MARGIN_CARD_MEDIUM_2),
                     PostReactionIconListSectionView(),
                   ],
@@ -94,9 +103,9 @@ class PostReationIconView extends StatelessWidget {
 }
 
 class PostImageView extends StatelessWidget {
-  const PostImageView({
-    Key? key,
-  }) : super(key: key);
+  final String postImage;
+
+  PostImageView({required this.postImage});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +117,7 @@ class PostImageView extends StatelessWidget {
         // color: Colors.blue,
         image: DecorationImage(
           image: NetworkImage(
-            "https://c2.staticflickr.com/4/3612/3320152658_f7a7c527c1_z.jpg",
+            postImage,
           ),
           fit: BoxFit.cover,
         ),
@@ -125,17 +134,66 @@ class PostImageView extends StatelessWidget {
   }
 }
 
+class PostVideoView extends StatefulWidget {
+  final String postVideo;
+
+  PostVideoView({required this.postVideo});
+
+  @override
+  State<PostVideoView> createState() => _PostVideoViewState();
+}
+
+class _PostVideoViewState extends State<PostVideoView> {
+  late FlickManager flickManager;
+
+  @override
+  void initState() {
+    super.initState();
+    flickManager = FlickManager(
+      videoPlayerController: VideoPlayerController.network(widget.postVideo),
+    );
+  }
+
+  @override
+  void dispose() {
+    flickManager.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
+      // height: 270,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.8),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+      ),
+    );
+  }
+}
+
 class PostDescriptionView extends StatelessWidget {
-  const PostDescriptionView({
-    Key? key,
-  }) : super(key: key);
+  final String description;
+
+  PostDescriptionView({required this.description});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: MARGIN_XLARGE),
       child: Text(
-        "Dinosaurs are a diverse group of reptiles of the clade Dinosauria. They first appeared during the Triassic period, between 243 and 233.23 million years ago, although the exact origin and timing of the evolution of dinosaurs is the subject of active research.",
+        description,
         style: TextStyle(
           color: Color.fromRGBO(98, 98, 98, 1.0),
           fontWeight: FontWeight.w500,
@@ -146,16 +204,16 @@ class PostDescriptionView extends StatelessWidget {
 }
 
 class PosterNameView extends StatelessWidget {
-  const PosterNameView({
-    Key? key,
-  }) : super(key: key);
+  final String userName;
+
+  PosterNameView({required this.userName});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: MARGIN_XLARGE),
       child: Text(
-        "Lieven Deprez",
+        userName,
         style: TextStyle(
           color: Colors.white,
           fontSize: TEXT_REGULAR_2X,

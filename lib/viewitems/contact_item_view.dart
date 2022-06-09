@@ -5,9 +5,11 @@ class ContactItemView extends StatelessWidget {
   const ContactItemView({
     Key? key,
     required this.avatarRadius,
+    required this.name,
   }) : super(key: key);
 
   final double avatarRadius;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class ContactItemView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Aimar Johnston",
+                      name,
                       style: TextStyle(
                         fontSize: TEXT_REGULAR_3X,
                         fontWeight: FontWeight.w700,

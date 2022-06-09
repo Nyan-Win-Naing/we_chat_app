@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/dummy/chat_vo.dart';
+import 'package:we_chat_app/dummy/dummy_chat_list.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
@@ -6,7 +8,12 @@ import 'package:we_chat_app/viewitems/conversation_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -41,13 +48,27 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ChatListView(avatarRadius: avatarRadius),
+              ChatListView(
+                avatarRadius: avatarRadius,
+                onTapDeleteChat: (chatVo) {
+                  setState(() {
+                    dummyChatList.remove(chatVo);
+                  });
+                },
+              ),
               DividerWithHeightSix(),
               SizedBox(height: MARGIN_LARGE),
               SubscriptionSectionView(),
               DividerWithHeightSix(),
               SizedBox(height: MARGIN_LARGE),
-              ChatListView(avatarRadius: avatarRadius),
+              ChatListView(
+                avatarRadius: avatarRadius,
+                onTapDeleteChat: (chatVo) {
+                  setState(() {
+                    dummyChatList.remove(chatVo);
+                  });
+                },
+              ),
             ],
           ),
         ),
@@ -168,9 +189,11 @@ class ChatListView extends StatefulWidget {
   const ChatListView({
     Key? key,
     required this.avatarRadius,
+    required this.onTapDeleteChat,
   }) : super(key: key);
 
   final double avatarRadius;
+  final Function(ChatVO) onTapDeleteChat;
 
   @override
   State<ChatListView> createState() => _ChatListViewState();
@@ -182,7 +205,7 @@ class _ChatListViewState extends State<ChatListView> {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: 4,
+      itemCount: dummyChatList.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
@@ -194,7 +217,9 @@ class _ChatListViewState extends State<ChatListView> {
               motion: ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (_) {},
+                  onPressed: (_) {
+                    widget.onTapDeleteChat(dummyChatList[index]);
+                  },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
@@ -202,7 +227,10 @@ class _ChatListViewState extends State<ChatListView> {
                 ),
               ],
             ),
-            child: ConversationItemView(avatarRadius: widget.avatarRadius),
+            child: ConversationItemView(
+              avatarRadius: widget.avatarRadius,
+              chatVo: dummyChatList[index],
+            ),
           ),
         );
       },

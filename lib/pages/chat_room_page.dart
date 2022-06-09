@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:we_chat_app/blocs/chat_room_bloc.dart';
-import 'package:we_chat_app/dummy/dummy_chat_list.dart';
+import 'package:we_chat_app/dummy/dummy_conversation_list.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/chat_function_item_view.dart';
@@ -85,9 +85,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   left: MARGIN_MEDIUM_2,
                   right: MARGIN_MEDIUM_2,
                 ),
-                itemCount: dummyChatList.length,
+                itemCount: dummyConversationList.length,
                 itemBuilder: (context, index) {
-                  return MessageItemView(chatVo: dummyChatList[index]);
+                  return MessageItemView(chatVo: dummyConversationList[index]);
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(

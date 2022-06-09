@@ -4,6 +4,7 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
+import 'package:we_chat_app/explicit_animations/explicit_animation_favourite_button.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 import 'package:we_chat_app/widgets/overlay_for_comment_section_view.dart';
@@ -38,28 +39,23 @@ class PostItemView extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            insertOverlayForPostDetail(context);
+            insertOverlayForPostDetail(context, momentVo ?? MomentVO());
           },
           child: PostDescriptionView(description: momentVo?.description ?? ""),
         ),
-        SizedBox(height: MARGIN_MEDIUM_2),
+        const SizedBox(height: MARGIN_MEDIUM_2),
         Visibility(
           visible: (momentVo?.postImage ?? "").isNotEmpty,
           child: GestureDetector(
             onTap: () {
-              insertOverlayForPostDetail(context);
+              insertOverlayForPostDetail(context, momentVo ?? MomentVO());
             },
             child: PostImageView(postImage: momentVo?.postImage ?? ""),
           ),
         ),
         Visibility(
           visible: (momentVo?.postVideo ?? "").isNotEmpty,
-          child: GestureDetector(
-            onTap: () {
-              insertOverlayForPostDetail(context);
-            },
-            child: PostVideoView(postVideo: momentVo?.postVideo ?? ""),
-          ),
+          child: PostVideoView(postVideo: momentVo?.postVideo ?? ""),
         ),
         SizedBox(height: MARGIN_MEDIUM_2),
         PostReactionsSectionView(
@@ -250,15 +246,16 @@ class PostReactionsSectionView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          PostReationIconView(iconData: Icons.favorite_border),
-          SizedBox(width: MARGIN_CARD_MEDIUM_2),
+          // PostReationIconView(iconData: Icons.favorite_border),
+          ExplicitAnimationFavouriteButton(),
+          const SizedBox(width: MARGIN_CARD_MEDIUM_2),
           GestureDetector(
             onTap: () {
               insertOverlayForComment(context);
             },
             child: PostReationIconView(iconData: Icons.comment_outlined),
           ),
-          SizedBox(width: MARGIN_CARD_MEDIUM_2),
+          const SizedBox(width: MARGIN_CARD_MEDIUM_2),
           MoreButtonView(
             onTapDelete: () {
               onTapDelete();
