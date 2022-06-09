@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/pages/startup_page.dart';
 import 'package:we_chat_app/pages/we_chat_app.dart';
 
 void main() async {
@@ -18,8 +19,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        unselectedWidgetColor: Color.fromRGBO(94, 94, 94, 1.0),
       ),
-      home: const WeChatApp(),
+      home: StartupPage(),
     );
   }
 }
