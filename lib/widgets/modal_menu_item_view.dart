@@ -10,11 +10,11 @@ class ModalMenuItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: MARGIN_MEDIUM_2),
+      padding: const EdgeInsets.symmetric(vertical: MARGIN_MEDIUM_2),
       child: Center(
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
               color: Color.fromRGBO(198, 198, 198, 1.0),
               fontSize: TEXT_REGULAR_2X),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/resources/colors.dart';
 
 class DividerWithHeightSix extends StatelessWidget {
   const DividerWithHeightSix({
@@ -9,7 +10,7 @@ class DividerWithHeightSix extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 6,
-      color: Color.fromRGBO(214, 214, 214, 1.0),
+      color: DIVDER_COLOR,
     );
   }
 }

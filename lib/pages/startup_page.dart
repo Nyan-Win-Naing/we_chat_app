@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:we_chat_app/pages/login_page.dart';
 import 'package:we_chat_app/pages/sign_up_by_phone_page.dart';
+import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/widgets/modal_menu_item_view.dart';
 
 class StartupPage extends StatelessWidget {
@@ -13,15 +15,16 @@ class StartupPage extends StatelessWidget {
           Image.asset(
             "assets/we_chat_background.jpg",
             fit: BoxFit.fill,
+            width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
-          Align(
+          const Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: MARGIN_XXLARGE, right: MARGIN_MEDIUM_2),
+              padding:
+                  EdgeInsets.only(top: MARGIN_XXLARGE, right: MARGIN_MEDIUM_2),
               child: Text(
-                "Language",
+                START_UP_PAGE_LANGUAGE_TEXT,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -65,8 +68,8 @@ class StartupPageButtonView extends StatelessWidget {
       child: TextButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all((isLogIn)
-              ? Color.fromRGBO(7, 193, 96, 1.0)
-              : Color.fromRGBO(25, 25, 25, 1.0)),
+              ? START_UP_PAGE_LOG_IN_BUTTON_COLOR
+              : START_UP_PAGE_SIGN_UP_BUTTON_COLOR),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
@@ -81,8 +84,8 @@ class StartupPageButtonView extends StatelessWidget {
           }
         },
         child: Text(
-          (isLogIn) ? "Log In" : "Sign Up",
-          style: TextStyle(
+          (isLogIn) ? START_UP_PAGE_LOGIN_TEXT : START_UP_PAGE_SIGN_UP_TEXT,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: TEXT_REGULAR_2X,
           ),
@@ -97,8 +100,8 @@ class StartupPageButtonView extends StatelessWidget {
       context: context,
       builder: (context) {
         return Container(
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(44, 44, 44, 1.0),
+          decoration: const BoxDecoration(
+            color: BOTTOM_SHEET_BACKGROUND_COLOR,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(MARGIN_MEDIUM_2),
               topRight: Radius.circular(MARGIN_MEDIUM_2),
@@ -109,20 +112,28 @@ class StartupPageButtonView extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   _navigateToSignUpByPhonePage(context);
                 },
-                child: ModalMenuItemView(text: "Sign up via Mobile"),
+                child: ModalMenuItemView(
+                    text: START_UP_BOTTOM_SHEET_SIGN_UP_VIA_MOBILE),
               ),
               Container(
                 height: 1,
-                color: Color.fromRGBO(255, 255, 255, 0.05),
+                color: BOTTOM_SHEET_SMALL_DIVIDER_COLOR,
               ),
-              ModalMenuItemView(text: "Sign up via Facebook"),
+              ModalMenuItemView(
+                  text: START_UP_BOTTOM_SHEET_SIGN_UP_VIA_FACEBOOK),
               Container(
                 height: 6,
-                color: Color.fromRGBO(30, 30, 30, 1.0),
+                color: BOTTOM_SHEET_LARGE_DIVIDER_COLOR,
               ),
-              ModalMenuItemView(text: "Cancel"),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: ModalMenuItemView(text: CANCEL_TEXT),
+              ),
             ],
           ),
         );

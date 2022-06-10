@@ -33,7 +33,7 @@ class _FormFieldViewState extends State<FormFieldView> {
         border: Border(
           bottom: BorderSide(
               color: (!isFocused)
-                  ? Color.fromRGBO(255, 255, 255, 0.05)
+                  ? const Color.fromRGBO(255, 255, 255, 0.05)
                   : PRIMARY_COLOR,
               width: 1),
         ),
@@ -43,7 +43,7 @@ class _FormFieldViewState extends State<FormFieldView> {
         children: [
           Text(
             widget.label,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: TEXT_REGULAR_2X,
               fontWeight: FontWeight.w400,
@@ -63,7 +63,7 @@ class _FormFieldViewState extends State<FormFieldView> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: widget.hintText,
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       color: Color.fromRGBO(94, 94, 94, 1.0),
                       fontSize: TEXT_REGULAR_2X,
                       fontWeight: FontWeight.w400,

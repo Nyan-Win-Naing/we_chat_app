@@ -22,7 +22,7 @@ class AuthenticationButtonView extends StatelessWidget {
         onPressed: () {
           _navigateToWeChatApp(context);
         },
-        child: Text(
+        child: const Text(
           "Accept and Continue",
           style: TextStyle(
             color: Colors.white,

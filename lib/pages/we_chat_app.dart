@@ -7,6 +7,7 @@ import 'package:we_chat_app/pages/moment_page.dart';
 import 'package:we_chat_app/pages/profile_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 
 class WeChatApp extends StatefulWidget {
   const WeChatApp({Key? key}) : super(key: key);
@@ -37,19 +38,19 @@ class _WeChatAppState extends State<WeChatApp> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.wechat_outlined, size: MARGIN_XLARGE + 5),
-            label: "WeChat",
+            label: BOTTOM_NAVIGATION_WE_CHAT_TEXT,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.contact_mail_outlined, size: MARGIN_XLARGE + 5),
-            label: "Contacts",
+            label: BOTTOM_NAVIGATION_CONTACTS_TEXT,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.compass_calibration_rounded, size: MARGIN_XLARGE + 5),
-            label: "Discover",
+            label: BOTTOM_NAVIGATION_DISCOVER_TEXT,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, size: MARGIN_XLARGE + 5),
-            label: "Me",
+            label: BOTTOM_NAVIGATION_ME_TEXT,
           ),
         ],
         currentIndex: bottomNavIndex,
@@ -57,7 +58,7 @@ class _WeChatAppState extends State<WeChatApp> {
         selectedItemColor: PRIMARY_COLOR,
         onTap: _onItemTapped,
         selectedFontSize: 12.0,
-        unselectedItemColor: Color.fromRGBO(193,193,193, 1.0),
+        unselectedItemColor: WE_CHAT_APP_BOTTOM_NAVIGATION_UNSELECTED_COLOR,
       ),
     );
   }

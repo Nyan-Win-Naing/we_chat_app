@@ -8,6 +8,7 @@ import 'package:we_chat_app/blocs/add_new_post_bloc.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/widgets/loading_view.dart';
 
 class AddNewPostPage extends StatelessWidget {
@@ -34,8 +35,10 @@ class AddNewPostPage extends StatelessWidget {
                 elevation: 1,
                 centerTitle: true,
                 title: Text(
-                  (momentId == null) ? "Create Post" : "Edit Post",
-                  style: TextStyle(
+                  (momentId == null)
+                      ? ADD_NEW_POST_APPBAR_TITLE_CREATE_POST
+                      : ADD_NEW_POST_APPBAR_TITLE_EDIT_POST,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,
                   ),
@@ -44,9 +47,9 @@ class AddNewPostPage extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.clear_outlined,
-                    color: Color.fromRGBO(255, 255, 255, 0.6),
+                    color: APP_BAR_LEADING_COLOR,
                   ),
                 ),
                 actions: [
@@ -60,13 +63,15 @@ class AddNewPostPage extends StatelessWidget {
                           bloc.onTapAddNewPost().then((value) {
                             Navigator.pop(context);
                           }).catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Your post is empty, write something....")));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(TEXT_FIELD_EMPTT_ERROR_TEXT),
+                              ),
+                            );
                           });
                         },
-                        child: Text(
-                          "Post",
+                        child: const Text(
+                          POST_BUTTON_TEXT,
                           style: TextStyle(
                             color: PRIMARY_COLOR,
                             fontWeight: FontWeight.w600,
@@ -89,15 +94,15 @@ class AddNewPostPage extends StatelessWidget {
                     SingleChildScrollView(
                       child: Column(
                         children: [
-                          SizedBox(height: MARGIN_CARD_MEDIUM_2),
+                          const SizedBox(height: MARGIN_CARD_MEDIUM_2),
                           ProfileAndPostMethodsSectionView(
                               avatarRadius: avatarRadius),
-                          SizedBox(height: MARGIN_MEDIUM),
-                          PostDescriptionAndImageSectionView(),
+                          const SizedBox(height: MARGIN_MEDIUM),
+                          const PostDescriptionAndImageSectionView(),
                         ],
                       ),
                     ),
-                    Align(
+                    const Align(
                       alignment: Alignment.bottomCenter,
                       child: BottomSectionView(),
                     )
@@ -135,103 +140,8 @@ class _BottomSectionViewState extends State<BottomSectionView> {
 
   @override
   Widget build(BuildContext context) {
-    // return (openBottomSheet)
-    //     ? Container(
-    //         decoration: BoxDecoration(
-    //           color: Colors.white,
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(MARGIN_MEDIUM_3),
-    //             topRight: Radius.circular(MARGIN_MEDIUM_3),
-    //           ),
-    //           boxShadow: [
-    //             BoxShadow(
-    //               color: Color.fromRGBO(0, 0, 0, 0.1),
-    //               spreadRadius: 1,
-    //               blurRadius: 1,
-    //               offset: Offset(0, -1),
-    //             )
-    //           ],
-    //         ),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             GestureDetector(
-    //               onTap: () {
-    //                 setState(() {
-    //                   openBottomSheet = !openBottomSheet;
-    //                 });
-    //               },
-    //               child: Icon(
-    //                 Icons.keyboard_arrow_down_outlined,
-    //                 color: Color.fromRGBO(0, 0, 0, 0.2),
-    //                 size: MARGIN_XLARGE,
-    //               ),
-    //             ),
-    //             Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               mainAxisSize: MainAxisSize.min,
-    //               children: [
-    //                 PostOptionItemView(
-    //                     icon: Icons.insert_photo_outlined,
-    //                     label: "Photo/video",
-    //                     color: Colors.green),
-    //                 PostOptionItemView(
-    //                     icon: Icons.person_pin_outlined,
-    //                     label: "Tag people",
-    //                     color: Colors.blue),
-    //                 PostOptionItemView(
-    //                     icon: Icons.emoji_emotions_outlined,
-    //                     label: "Feeling/activity",
-    //                     color: Colors.yellow),
-    //                 PostOptionItemView(
-    //                     icon: Icons.location_on_outlined,
-    //                     label: "Check in",
-    //                     color: Colors.red),
-    //                 PostOptionItemView(
-    //                     icon: Icons.video_camera_back,
-    //                     label: "Live video",
-    //                     color: Colors.redAccent),
-    //                 PostOptionItemView(
-    //                     icon: Icons.color_lens_rounded,
-    //                     label: "Background color",
-    //                     color: Colors.orangeAccent),
-    //               ],
-    //             )
-    //           ],
-    //         ),
-    //       )
-    //     : Container(
-    //         width: double.infinity,
-    //         decoration: BoxDecoration(
-    //           color: Colors.white,
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(MARGIN_MEDIUM_3),
-    //             topRight: Radius.circular(MARGIN_MEDIUM_3),
-    //           ),
-    //           boxShadow: [
-    //             BoxShadow(
-    //               color: Color.fromRGBO(0, 0, 0, 0.1),
-    //               spreadRadius: 1,
-    //               blurRadius: 1,
-    //               offset: Offset(0, -1),
-    //             )
-    //           ],
-    //         ),
-    //         child: GestureDetector(
-    //           onTap: () {
-    //             setState(() {
-    //               openBottomSheet = !openBottomSheet;
-    //             });
-    //           },
-    //           child: Icon(
-    //             Icons.keyboard_arrow_up_outlined,
-    //             color: Color.fromRGBO(33, 230, 88, 1.0),
-    //             size: MARGIN_XLARGE,
-    //           ),
-    //         ),
-    //       );
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(MARGIN_MEDIUM_3),
@@ -260,7 +170,7 @@ class _BottomSectionViewState extends State<BottomSectionView> {
                   ? Icons.keyboard_arrow_down_outlined
                   : Icons.keyboard_arrow_up_outlined,
               color: (openBottomSheet)
-                  ? Color.fromRGBO(0, 0, 0, 0.2)
+                  ? const Color.fromRGBO(0, 0, 0, 0.2)
                   : PRIMARY_COLOR,
               size: MARGIN_XLARGE,
             ),
@@ -287,30 +197,30 @@ class _BottomSectionViewState extends State<BottomSectionView> {
                         },
                         child: PostOptionItemView(
                             icon: Icons.insert_photo_outlined,
-                            label: "Photo/video",
+                            label: POST_OPTION_ITEM_1,
                             color: Colors.green),
                       );
                     },
                   ),
                   PostOptionItemView(
                       icon: Icons.person_pin_outlined,
-                      label: "Tag people",
+                      label: POST_OPTION_ITEM_2,
                       color: Colors.blue),
                   PostOptionItemView(
                       icon: Icons.emoji_emotions_outlined,
-                      label: "Feeling/activity",
+                      label: POST_OPTION_ITEM_3,
                       color: Colors.yellow),
                   PostOptionItemView(
                       icon: Icons.location_on_outlined,
-                      label: "Check in",
+                      label: POST_OPTION_ITEM_4,
                       color: Colors.red),
                   PostOptionItemView(
                       icon: Icons.video_camera_back,
-                      label: "Live video",
+                      label: POST_OPTION_ITEM_5,
                       color: Colors.redAccent),
                   PostOptionItemView(
                       icon: Icons.color_lens_rounded,
-                      label: "Background color",
+                      label: POST_OPTION_ITEM_6,
                       color: Colors.orangeAccent),
                 ],
               ),
@@ -327,8 +237,11 @@ class PostOptionItemView extends StatelessWidget {
   final String label;
   final Color color;
 
-  PostOptionItemView(
-      {required this.icon, required this.label, required this.color});
+  PostOptionItemView({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -371,7 +284,7 @@ class _PostDescriptionAndImageSectionViewState
 
   @override
   void dispose() {
-    if(flickManager != null) {
+    if (flickManager != null) {
       flickManager?.dispose();
     }
     super.dispose();
@@ -394,7 +307,7 @@ class _PostDescriptionAndImageSectionViewState
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: "What's on your mind?",
+                hintText: POST_TEXT_FIELD_HINT_TEXT,
                 hintStyle: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 0.3),
                   fontWeight: FontWeight.w400,
@@ -403,22 +316,34 @@ class _PostDescriptionAndImageSectionViewState
             ),
             Builder(
               builder: (context) {
-                if (bloc.chosenImageFile != null || bloc.networkImage.isNotEmpty) {
+                if (bloc.chosenImageFile != null ||
+                    bloc.networkImage.isNotEmpty) {
                   return Stack(
                     children: [
-                      (bloc.chosenImageFile != null) ? Image.file(
-                        bloc.chosenImageFile ?? File(""),
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ) : Image.network(bloc.networkImage, fit: BoxFit.cover, width: double.infinity,),
+                      (bloc.chosenImageFile != null)
+                          ? Image.file(
+                              bloc.chosenImageFile ?? File(""),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          : Image.network(
+                              bloc.networkImage,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                       ChosenFileRemover(bloc: bloc),
                     ],
                   );
-                } else if (bloc.chosenVideoFile != null || bloc.networkVideo.isNotEmpty) {
-                  flickManager = (bloc.chosenVideoFile != null) ? FlickManager(
-                    videoPlayerController: VideoPlayerController.file(
-                        bloc.chosenVideoFile ?? File("")),
-                  ) : FlickManager(videoPlayerController: VideoPlayerController.network(bloc.networkVideo));
+                } else if (bloc.chosenVideoFile != null ||
+                    bloc.networkVideo.isNotEmpty) {
+                  flickManager = (bloc.chosenVideoFile != null)
+                      ? FlickManager(
+                          videoPlayerController: VideoPlayerController.file(
+                              bloc.chosenVideoFile ?? File("")),
+                        )
+                      : FlickManager(
+                          videoPlayerController:
+                              VideoPlayerController.network(bloc.networkVideo));
                   return Stack(
                     children: [
                       FlickVideoPlayer(
@@ -450,14 +375,13 @@ class ChosenFileRemover extends StatelessWidget {
       onTap: () {
         bloc.onTapDeleteFile();
       },
-      child: Align(
+      child: const Align(
         alignment: Alignment.topRight,
         child: Padding(
-          padding:
-              const EdgeInsets.only(right: MARGIN_MEDIUM, top: MARGIN_MEDIUM),
+          padding: EdgeInsets.only(right: MARGIN_MEDIUM, top: MARGIN_MEDIUM),
           child: Icon(
             Icons.close,
-            color: Color.fromRGBO(255, 255, 255, 0.5),
+            color: POST_IMAGE_OR_VIDEO_REMOVER_COLOR,
             // color: Colors.redAccent,
             size: MARGIN_MEDIUM_3,
           ),
@@ -490,14 +414,14 @@ class ProfileAndPostMethodsSectionView extends StatelessWidget {
                     : "https://static.vecteezy.com/system/resources/previews/002/534/006/original/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg",
               ),
             ),
-            SizedBox(width: MARGIN_MEDIUM),
+            const SizedBox(width: MARGIN_MEDIUM),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   bloc.username,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -529,32 +453,33 @@ class PostMethodItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: MARGIN_SMALL, vertical: 2),
+      padding:
+          const EdgeInsets.symmetric(horizontal: MARGIN_SMALL, vertical: 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(MARGIN_SMALL),
           border: Border.all(
-            color: Color.fromRGBO(0, 0, 0, 0.3),
+            color: const Color.fromRGBO(0, 0, 0, 0.3),
             width: 1,
           )),
       child: Row(
         children: [
           Icon(
             iconData,
-            color: Color.fromRGBO(109, 109, 109, 1.0),
+            color: POST_METHOD_ITEM_ICON_COLOR,
             size: MARGIN_MEDIUM_2,
           ),
-          SizedBox(width: 2),
+          const SizedBox(width: 2),
           Text(
             label,
-            style: TextStyle(
-              color: Color.fromRGBO(109, 109, 109, 1.0),
+            style: const TextStyle(
+              color: POST_METHOD_ITEM_ICON_COLOR,
               fontSize: 12,
             ),
           ),
           SizedBox(width: 2),
-          Icon(
+          const Icon(
             Icons.arrow_drop_down,
-            color: Color.fromRGBO(109, 109, 109, 1.0),
+            color: POST_METHOD_ITEM_ICON_COLOR,
             size: MARGIN_MEDIUM_2,
           )
         ],

@@ -99,7 +99,7 @@ class AddNewPostBloc extends ChangeNotifier {
   Future<dynamic> _editMoment() {
     mMoment?.description = newPostDescription;
     if(mMoment != null) {
-      return _model.editPost(mMoment!, chosenImageFile, chosenVideoFile);
+      return _model.editPost(mMoment!, chosenImageFile, chosenVideoFile, networkImage, networkVideo);
     } else {
       return Future.error("Error");
     }

@@ -3,6 +3,7 @@ import 'package:we_chat_app/dummy/dummy_data_for_contact_page.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/viewitems/contact_item_by_alphabet.dart';
 import 'package:we_chat_app/viewitems/contact_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
@@ -20,19 +21,19 @@ class ContactPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         elevation: 1,
         centerTitle: true,
-        title: Text(
-          "Contacts",
+        title: const Text(
+          CONTACT_PAGE_APP_BAR_TITLE,
           style: TextStyle(
             color: Colors.white,
             fontSize: TEXT_REGULAR_2X,
           ),
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+            padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
             child: Icon(
               Icons.person_add_alt,
-              color: Color.fromRGBO(255, 255, 255, 0.7),
+              color: APP_BAR_ACTION_ICON_COLOR,
               size: MARGIN_XLARGE,
             ),
           ),
@@ -44,20 +45,20 @@ class ContactPage extends StatelessWidget {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: MARGIN_MEDIUM),
-                  SearchFieldSectionView(),
-                  SizedBox(height: MARGIN_MEDIUM),
+                  const SizedBox(height: MARGIN_MEDIUM),
+                  const SearchFieldSectionView(),
+                  const SizedBox(height: MARGIN_MEDIUM),
                   Container(
-                    color: Color.fromRGBO(0, 0, 0, 0.1),
+                    color: DIVIDER_SMALL_COLOR,
                     height: 1,
                   ),
-                  SizedBox(height: MARGIN_MEDIUM_2),
-                  ContactFunctionsView(),
-                  SizedBox(height: MARGIN_MEDIUM_2),
-                  DividerWithHeightSix(),
+                  const SizedBox(height: MARGIN_MEDIUM_2),
+                  const ContactFunctionsView(),
+                  const SizedBox(height: MARGIN_MEDIUM_2),
+                  const DividerWithHeightSix(),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: alphabetsStartByName.length,
                     itemBuilder: (context, index) {
                       return ContactItemByAlphabet(alphabet: alphabetsStartByName[index]);
@@ -75,15 +76,15 @@ class ContactPage extends StatelessWidget {
                       (e) => (e.runtimeType == IconData)
                           ? Icon(
                               e,
-                              color: Color.fromRGBO(91, 91, 91, 1.0),
+                              color: CONTACT_ALPHABET_NAVIGATOR_COLOR,
                               size: MARGIN_MEDIUM_2,
                             )
                           : Container(
-                              margin: EdgeInsets.only(bottom: 2),
+                              margin: const EdgeInsets.only(bottom: 2),
                               child: Text(
                                 e,
-                                style: TextStyle(
-                                    color: Color.fromRGBO(91, 91, 91, 1.0),
+                                style: const TextStyle(
+                                    color: CONTACT_ALPHABET_NAVIGATOR_COLOR,
                                     fontSize: TEXT_REGULAR - 2,
                                     fontWeight: FontWeight.w700),
                               ),
@@ -113,34 +114,34 @@ class ContactFunctionsView extends StatelessWidget {
         children: [
           ContactFunctionItem(
             iconData: Icons.person_add_alt,
-            label: "New\nFriends",
+            label: CONTACT_FUNCTION_NEW_FRIENDS,
           ),
           Container(
-            color: Color.fromRGBO(0, 0, 0, 0.08),
+            color: CONTACT_FUNCTION_DIVIDER_COLOR,
             height: MARGIN_XXLARGE + 5,
             width: 1,
           ),
           ContactFunctionItem(
             iconData: Icons.group,
-            label: "Group\nChats",
+            label: CONTACT_FUNCTION_GROUP_CHATS,
           ),
           Container(
-            color: Color.fromRGBO(0, 0, 0, 0.08),
+            color: CONTACT_FUNCTION_DIVIDER_COLOR,
             height: MARGIN_XXLARGE + 5,
             width: 1,
           ),
           ContactFunctionItem(
             iconData: Icons.link,
-            label: "Tags",
+            label: CONTACT_FUNCTION_TAGS,
           ),
           Container(
-            color: Color.fromRGBO(0, 0, 0, 0.08),
+            color: CONTACT_FUNCTION_DIVIDER_COLOR,
             height: MARGIN_XXLARGE + 5,
             width: 1,
           ),
           ContactFunctionItem(
             iconData: Icons.account_circle_outlined,
-            label: "Official\nAccounts",
+            label: CONTACT_FUNCTION_OFFICIAL_ACCOUNTS,
           ),
         ],
       ),
@@ -161,15 +162,15 @@ class ContactFunctionItem extends StatelessWidget {
       children: [
         Icon(
           iconData,
-          color: Color.fromRGBO(192, 192, 192, 1.0),
+          color: CONTACT_FUNCTION_ITEM_ICON_COLOR,
           size: MARGIN_XLARGE,
         ),
-        SizedBox(height: MARGIN_SMALL),
+        const SizedBox(height: MARGIN_SMALL),
         Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color.fromRGBO(145, 145, 145, 1.0),
+          style: const TextStyle(
+            color: CONTACT_FUNCTION_ITEM_TEXT_COLOR,
             fontSize: TEXT_REGULAR - 2,
             fontWeight: FontWeight.w500,
           ),
@@ -194,19 +195,19 @@ class SearchFieldSectionView extends StatelessWidget {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Color.fromRGBO(227, 228, 231, 1.0),
+            fillColor: CONTACT_PAGE_SEARCH_FIELD_COLOR,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 0,
                 style: BorderStyle.none,
               ),
             ),
-            hintText: "Search",
-            hintStyle: TextStyle(
-              color: Color.fromRGBO(165, 163, 169, 1.0),
+            hintText: SEARCH_FIELD_HINT_TEXT,
+            hintStyle: const TextStyle(
+              color: CONTACT_PAGE_SEARCH_FIELD_HINT_TEXT_COLOR,
             ),
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: const EdgeInsets.all(0),
           ),
         ),
       ),

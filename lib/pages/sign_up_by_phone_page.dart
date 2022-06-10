@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat_app/pages/we_chat_app.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/widgets/authentication_button_view.dart';
 import 'package:we_chat_app/widgets/form_field_view.dart';
 import 'package:we_chat_app/widgets/title_section_for_authentication.dart';
@@ -16,15 +17,15 @@ class _SignUpByPhonePageState extends State<SignUpByPhonePage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(25, 25, 25, 1.0),
+      backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromRGBO(25, 25, 25, 1.0),
+        backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.close,
             color: Colors.white,
           ),
@@ -35,15 +36,15 @@ class _SignUpByPhonePageState extends State<SignUpByPhonePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TitleSectionForAuthentication(title: "Sign up by phone number"),
-              SizedBox(height: MARGIN_LARGE),
-              ImagePickerView(),
-              SizedBox(height: MARGIN_XXLARGE),
+              TitleSectionForAuthentication(title: SIGN_UP_PAGE_TITLE),
+              const SizedBox(height: MARGIN_LARGE),
+              const ImagePickerView(),
+              const SizedBox(height: MARGIN_XXLARGE),
               RegistrationFormsSectionView(screenWidth: screenWidth),
-              SizedBox(height: MARGIN_3XLARGE),
+              const SizedBox(height: MARGIN_3XLARGE),
               TermsAndConditionsSectionView(),
-              SignUpPageLabelView(),
-              SizedBox(height: MARGIN_MEDIUM_2),
+              const SignUpPageLabelView(),
+              const SizedBox(height: MARGIN_MEDIUM_2),
               AuthenticationButtonView(),
             ],
           ),
@@ -61,11 +62,11 @@ class SignUpPageLabelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "The information collected on this page is only used for account registration",
+    return const Text(
+      SIGN_UP_PAGE_DESCRIPTION,
       textAlign: TextAlign.center,
       style: TextStyle(
-        color: Color.fromRGBO(94, 94, 94, 1.0),
+        color: LOG_IN_DESCRIPTION_COLOR,
         fontSize: TEXT_REGULAR - 2,
       ),
     );
@@ -98,11 +99,11 @@ class _TermsAndConditionsSectionViewState
           },
         ),
         SizedBox(width: MARGIN_SMALL),
-        Text(
-          "I have read and accept the <<WeChat-Terms\n of Service>>",
+        const Text(
+          SIGN_UP_PAGE_ACCEPT_TERMS_AND_POLICY,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Color.fromRGBO(94, 94, 94, 1.0),
+            color: LOG_IN_DESCRIPTION_COLOR,
             fontSize: TEXT_REGULAR - 2,
           ),
         ),
@@ -128,27 +129,27 @@ class RegistrationFormsSectionView extends StatelessWidget {
         children: [
           FormFieldView(
             screenWidth: screenWidth,
-            label: "Name",
-            hintText: "John Appleseed",
+            label: NAME_FIELD_LABEL,
+            hintText: NAME_FIELD_HINT_TEXT,
           ),
-          SizedBox(height: MARGIN_CARD_MEDIUM_2),
+          const SizedBox(height: MARGIN_CARD_MEDIUM_2),
           FormFieldView(
             screenWidth: screenWidth,
-            label: "Country/\nRegion",
+            label: COUNTRY_REGION_FIELD_LABEL,
             hintText: "United State (+1)",
             isTextField: false,
           ),
-          SizedBox(height: MARGIN_MEDIUM),
+          const SizedBox(height: MARGIN_MEDIUM),
           FormFieldView(
             screenWidth: screenWidth,
-            label: "Phone",
-            hintText: "Enter mobile number",
+            label: PHONE_FIELD_LABEL_TEXT,
+            hintText: PHONE_FIELD_HINT_TEXT,
           ),
-          SizedBox(height: MARGIN_MEDIUM),
+          const SizedBox(height: MARGIN_MEDIUM),
           FormFieldView(
             screenWidth: screenWidth,
-            label: "Password",
-            hintText: "Enter password",
+            label: PASSWORD_FIELD_LABEL_TEXT,
+            hintText: PASSWORD_FIELD_HINT_TEXT,
           ),
         ],
       ),
@@ -166,8 +167,8 @@ class ImagePickerView extends StatelessWidget {
     return Container(
       width: 70,
       height: 70,
-      color: Color.fromRGBO(221, 221, 221, 1.0),
-      child: Center(
+      color: SIGN_UP_PAGE_IMAGE_PICKER_BACKGROUND,
+      child: const Center(
         child: Icon(
           Icons.camera_alt,
           color: Colors.white,

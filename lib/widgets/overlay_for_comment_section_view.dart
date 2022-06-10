@@ -14,13 +14,13 @@ void insertOverlayForComment(BuildContext context) {
           overlayEntryForComment.remove();
         },
         child: Scaffold(
-          backgroundColor: Color.fromRGBO(0, 0, 0, 0.85),
+          backgroundColor: const Color.fromRGBO(0, 0, 0, 0.85),
           body: Stack(
             children: [
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  padding: EdgeInsets.only(bottom: MARGIN_MEDIUM),
+                  padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -33,7 +33,7 @@ void insertOverlayForComment(BuildContext context) {
                             color: Color.fromRGBO(66, 177, 98, 1.0),
                             size: MARGIN_MEDIUM_3,
                           ),
-                          SizedBox(width: MARGIN_SMALL),
+                          const SizedBox(width: MARGIN_SMALL),
                           Container(
                             height: 2,
                             width:
@@ -42,7 +42,7 @@ void insertOverlayForComment(BuildContext context) {
                           )
                         ],
                       ),
-                      CommentTextFieldView(),
+                      const CommentTextFieldView(),
                     ],
                   ),
                 ),

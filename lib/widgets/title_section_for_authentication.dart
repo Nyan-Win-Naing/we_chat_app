@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 class TitleSectionForAuthentication extends StatelessWidget {
@@ -13,8 +14,8 @@ class TitleSectionForAuthentication extends StatelessWidget {
       padding: const EdgeInsets.only(top: MARGIN_XXLARGE - 8),
       child: Text(
         title,
-        style: TextStyle(
-          color: Color.fromRGBO(202, 202, 202, 1.0),
+        style: const TextStyle(
+          color: AUTHENTICATION_PAGE_TITLE_TEXT_COLOR,
           fontSize: TEXT_REGULAR_3X,
           fontWeight: FontWeight.w400,
         ),

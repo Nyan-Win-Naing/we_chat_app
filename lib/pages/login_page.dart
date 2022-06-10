@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/widgets/authentication_button_view.dart';
 import 'package:we_chat_app/widgets/form_field_view.dart';
 import 'package:we_chat_app/widgets/modal_menu_item_view.dart';
@@ -17,15 +19,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(25, 25, 25, 1.0),
+      backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromRGBO(25, 25, 25, 1.0),
+        backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.close,
             color: Colors.white,
           ),
@@ -35,11 +37,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TitleSectionForAuthentication(title: "Log In Via Mobile Number"),
-            SizedBox(height: MARGIN_XXLARGE),
+            TitleSectionForAuthentication(title: LOG_IN_VIA_MOBILE_NUMBER),
+            const SizedBox(height: MARGIN_XXLARGE),
             LoginFieldsSectionView(
                 screenWidth: screenWidth, isLoginWithMail: isLoginWithMail),
-            SizedBox(height: MARGIN_MEDIUM_3),
+            const SizedBox(height: MARGIN_MEDIUM_3),
             GestureDetector(
               onTap: () {
                 if(!isLoginWithMail) {
@@ -50,10 +52,10 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 }
               },
-              child: OtherLoginOptionsLabelView(label: (!isLoginWithMail) ? "Other Login Options" : "Log in via mobile number"),
+              child: OtherLoginOptionsLabelView(label: (!isLoginWithMail) ? OTHER_LOGIN_OPTIONS : LOG_IN_VIA_MOBILE_NUMBER_WITH_SMALL_CAP),
             ),
-            Spacer(),
-            LoginBottomSectionView(),
+            const Spacer(),
+            const LoginBottomSectionView(),
           ],
         ),
       ),
@@ -66,8 +68,8 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (context) {
         return Container(
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(44, 44, 44, 1.0),
+          decoration: const BoxDecoration(
+            color: BOTTOM_SHEET_BACKGROUND_COLOR,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(MARGIN_MEDIUM_2),
               topRight: Radius.circular(MARGIN_MEDIUM_2),
@@ -84,18 +86,18 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 },
                 child:
-                    ModalMenuItemView(text: "Log in via WeChat ID/Email/QQ ID"),
+                    ModalMenuItemView(text: LOG_IN_VIA_WECHAT_EMAIL_QQ),
               ),
               Container(
                 height: 1,
-                color: Color.fromRGBO(255, 255, 255, 0.05),
+                color: BOTTOM_SHEET_SMALL_DIVIDER_COLOR,
               ),
-              ModalMenuItemView(text: "Log in via Facebook"),
+              ModalMenuItemView(text: LOG_IN_VIA_FACEBOOK),
               Container(
                 height: 6,
-                color: Color.fromRGBO(30, 30, 30, 1.0),
+                color: BOTTOM_SHEET_LARGE_DIVIDER_COLOR,
               ),
-              ModalMenuItemView(text: "Cancel"),
+              ModalMenuItemView(text: CANCEL_TEXT),
             ],
           ),
         );
@@ -114,29 +116,29 @@ class LoginBottomSectionView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        LogInDescriptionView(),
-        SizedBox(height: MARGIN_MEDIUM_2),
+        const LogInDescriptionView(),
+        const SizedBox(height: MARGIN_MEDIUM_2),
         AuthenticationButtonView(),
-        SizedBox(height: MARGIN_XLARGE + 8),
+        const SizedBox(height: MARGIN_XLARGE + 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Text(
-              "Unable to Log In?",
+              ENABLE_TO_LOGIN_TEXT,
               style: TextStyle(
-                color: Color.fromRGBO(127, 144, 160, 1.0),
+                color: AUTHENTICATION_PAGE_LIGHT_BLUE_COLOR,
               ),
             ),
             SizedBox(width: MARGIN_XLARGE),
             Text(
-              "More Options",
+              MORE_OPTIONS_TEXT,
               style: TextStyle(
-                color: Color.fromRGBO(127, 144, 160, 1.0),
+                color: AUTHENTICATION_PAGE_LIGHT_BLUE_COLOR,
               ),
             ),
           ],
         ),
-        SizedBox(height: MARGIN_XLARGE),
+        const SizedBox(height: MARGIN_XLARGE),
       ],
     );
   }
@@ -150,9 +152,9 @@ class LogInDescriptionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text(
-      "The above mobile number is used only for login verification.",
+      LOG_IN_DESCRIPTION_TEXT,
       style: TextStyle(
-        color: Color.fromRGBO(94, 94, 94, 1.0),
+        color: LOG_IN_DESCRIPTION_COLOR,
         fontSize: TEXT_REGULAR - 2,
       ),
     );
@@ -170,11 +172,11 @@ class OtherLoginOptionsLabelView extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: MARGIN_CARD_MEDIUM_2),
+          padding: const EdgeInsets.symmetric(horizontal: MARGIN_CARD_MEDIUM_2),
           child: Text(
             label,
-            style: TextStyle(
-              color: Color.fromRGBO(127, 144, 160, 1.0),
+            style: const TextStyle(
+              color: AUTHENTICATION_PAGE_LIGHT_BLUE_COLOR,
             ),
           ),
         ),
@@ -203,20 +205,20 @@ class LoginFieldsSectionView extends StatelessWidget {
           (!isLoginWithMail)
               ? FormFieldView(
                   screenWidth: screenWidth,
-                  label: "Country/\nRegion",
+                  label: COUNTRY_REGION_FIELD_LABEL,
                   hintText: "United State (+1)",
                   isTextField: false,
                 )
               : FormFieldView(
                   screenWidth: screenWidth,
-                  label: "Account",
-                  hintText: "WeChat ID/Email/QQ ID",
+                  label: ACCOUNT_FIELD_LABEL,
+                  hintText: ACCOUNT_FIELD_HINT_TEXT,
                 ),
-          SizedBox(height: MARGIN_MEDIUM),
+          const SizedBox(height: MARGIN_MEDIUM),
           FormFieldView(
             screenWidth: screenWidth,
-            label: (!isLoginWithMail) ? "Phone" : "Password",
-            hintText: (!isLoginWithMail) ? "Enter mobile number" : "Enter password",
+            label: (!isLoginWithMail) ? PHONE_FIELD_LABEL_TEXT : PASSWORD_FIELD_LABEL_TEXT,
+            hintText: (!isLoginWithMail) ? PHONE_FIELD_HINT_TEXT : PASSWORD_FIELD_HINT_TEXT,
           ),
         ],
       ),

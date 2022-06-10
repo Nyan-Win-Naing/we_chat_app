@@ -5,6 +5,7 @@ import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/pages/add_new_post_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/viewitems/post_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 
@@ -24,8 +25,8 @@ class MomentPage extends StatelessWidget {
           leadingWidth: 260,
           centerTitle: true,
           elevation: 1,
-          title: Text(
-            "Moments",
+          title: const Text(
+            MOMENT_APP_BAR_TITLE,
             style: TextStyle(
               color: Colors.white,
               fontSize: TEXT_REGULAR_2X,
@@ -34,16 +35,16 @@ class MomentPage extends StatelessWidget {
           leading: Padding(
             padding: const EdgeInsets.only(left: 0),
             child: Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.chevron_left,
-                  color: Color.fromRGBO(255, 255, 255, 0.7),
+                  color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
                   size: MARGIN_XLARGE + 8,
                 ),
                 Text(
-                  "Discover",
+                  MOMENT_APP_BAR_LEADING_TEXT,
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                    color: MOMENT_APP_BAR_LEADING_TEXT_COLOR,
                     fontSize: TEXT_REGULAR_2X,
                   ),
                 ),
@@ -57,9 +58,9 @@ class MomentPage extends StatelessWidget {
                 onTap: () {
                   _navigateToAddNewPostPage(context);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.add_a_photo_outlined,
-                  color: Color.fromRGBO(255, 255, 255, 0.7),
+                  color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
                   size: MARGIN_LARGE,
                 ),
               ),
@@ -70,7 +71,7 @@ class MomentPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                MomentPageProfileSectionView(),
+                const MomentPageProfileSectionView(),
                 Selector<MomentsBloc, List<MomentVO>>(
                   selector: (context, bloc) => bloc.moments ?? [],
                   builder: (context, moments, child) => ListView.builder(
@@ -86,7 +87,7 @@ class MomentPage extends StatelessWidget {
                           bloc.onTapDeletePost(momentId);
                         },
                         onTapEdit: (momentId) {
-                          Future.delayed(Duration(milliseconds: 1000))
+                          Future.delayed(const Duration(milliseconds: 1000))
                               .then((value) {
                             _navigateToEditPostPage(context, momentId);
                           });
@@ -134,7 +135,7 @@ class MomentPageProfileSectionView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Container(
       height: screenHeight * 1.12 / 3,
-      color: Color.fromRGBO(243, 243, 243, 1.0),
+      color: MOMENT_PAGE_BACKGROUND_COLOR,
       child: Stack(
         children: [
           Align(
@@ -142,12 +143,12 @@ class MomentPageProfileSectionView extends StatelessWidget {
             child:
                 ProfileBackgroundImageSectionView(screenHeight: screenHeight),
           ),
-          Positioned(
+          const Positioned(
             bottom: MARGIN_MEDIUM_2,
             left: 100,
             child: ProfilePhotoView(),
           ),
-          Align(
+          const Align(
             alignment: Alignment.bottomRight,
             child: DateAndMomentsCountView(),
           )
@@ -170,7 +171,7 @@ class DateAndMomentsCountView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: const [
           Text(
             "Sunday, Sept 14, 2015",
             style: TextStyle(
@@ -204,8 +205,8 @@ class ProfilePhotoView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey,
         shape: BoxShape.circle,
-        border: Border.all(color: Color.fromRGBO(109, 109, 109, 1.0), width: 2),
-        image: DecorationImage(
+        border: Border.all(color: MOMENT_PAGE_PROFILE_PHOTO_BORDER_COLOR, width: 2),
+        image: const DecorationImage(
           image: NetworkImage(
             "https://i.pinimg.com/236x/4e/9f/03/4e9f035d05faeb0561835197a51a51f5.jpg",
           ),
@@ -238,10 +239,10 @@ class ProfileBackgroundImageSectionView extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                       right: MARGIN_CARD_MEDIUM_2,
                       bottom: MARGIN_CARD_MEDIUM_2),
                   child: Text(

@@ -61,7 +61,7 @@ class WechatModelImpl extends WechatModel {
   }
 
   @override
-  Future<void> editPost(MomentVO moment, File? imageFile, File? videoFile) {
+  Future<void> editPost(MomentVO moment, File? imageFile, File? videoFile, String currentImage, String currentVideo) {
     if(imageFile != null) {
       return mDataAgent
           .uploadFileToFirebase(imageFile)
@@ -73,7 +73,7 @@ class WechatModelImpl extends WechatModel {
           .then((downloadUrl) => editMomentVO(moment, "", downloadUrl))
           .then((moment) => mDataAgent.addNewMoment(moment));
     } else {
-      return editMomentVO(moment, "", "")
+      return editMomentVO(moment, currentImage, currentVideo)
           .then((moment) => mDataAgent.addNewMoment(moment));
     }
   }

@@ -163,11 +163,11 @@ class _PostVideoViewState extends State<PostVideoView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
+      margin: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
       // height: 270,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.8),
             spreadRadius: 1,
@@ -194,7 +194,7 @@ class PostDescriptionView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: MARGIN_XLARGE),
       child: Text(
         description,
-        style: TextStyle(
+        style: const TextStyle(
           color: Color.fromRGBO(98, 98, 98, 1.0),
           fontWeight: FontWeight.w500,
         ),
@@ -214,7 +214,7 @@ class PosterNameView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: MARGIN_XLARGE),
       child: Text(
         userName,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: TEXT_REGULAR_2X,
           fontWeight: FontWeight.w700,

@@ -4,6 +4,7 @@ import 'package:we_chat_app/dummy/dummy_chat_list.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
+import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/viewitems/conversation_item_view.dart';
 import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -20,25 +21,25 @@ class _HomePageState extends State<HomePage> {
     final avatarRadius = screenHeight / 22;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(242, 243, 242, 1.0),
+      backgroundColor: HOME_SCREEEN_BACKGROUND_COLOR,
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
         elevation: 1,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: Text(
-          "WeChat",
+        title: const Text(
+          HOME_PAEG_TITLE,
           style: TextStyle(
             color: Colors.white,
             fontSize: TEXT_REGULAR_2X,
           ),
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+            padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
             child: Icon(
               Icons.add,
-              color: Color.fromRGBO(255, 255, 255, 0.7),
+              color: APP_BAR_ACTION_ICON_COLOR,
               size: MARGIN_XLARGE,
             ),
           ),
@@ -56,10 +57,10 @@ class _HomePageState extends State<HomePage> {
                   });
                 },
               ),
-              DividerWithHeightSix(),
+              const DividerWithHeightSix(),
               SizedBox(height: MARGIN_LARGE),
-              SubscriptionSectionView(),
-              DividerWithHeightSix(),
+              const SubscriptionSectionView(),
+              const DividerWithHeightSix(),
               SizedBox(height: MARGIN_LARGE),
               ChatListView(
                 avatarRadius: avatarRadius,
@@ -86,9 +87,9 @@ class SubscriptionSectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 150,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           horizontal: MARGIN_MEDIUM_2, vertical: MARGIN_MEDIUM),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
           top: BorderSide(width: 2.0, color: Color.fromRGBO(0, 0, 0, 0.1)),
@@ -109,9 +110,9 @@ class SubscriptionSectionView extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
-                      "Tencent Official",
+                      CHAT_PAEG_TENCENT_OFFICIAL,
                       style: TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         fontWeight: FontWeight.w700,
@@ -119,7 +120,7 @@ class SubscriptionSectionView extends StatelessWidget {
                     ),
                     SizedBox(height: MARGIN_MEDIUM),
                     Text(
-                      "WeChat Now is Available in India And ..",
+                      CHAT_PAGE_TENCENT_SUBSCRIPTION_DESCRIPTION_ONE,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Color.fromRGBO(0, 0, 0, 0.7),
@@ -127,7 +128,7 @@ class SubscriptionSectionView extends StatelessWidget {
                     ),
                     SizedBox(height: MARGIN_SMALL),
                     Text(
-                      "Our app is being promoted in India via gaming site Ibibo. The 'moments', and ...",
+                      CHAT_PAGE_TENCENT_SUBSCRIPTION_DESCRIPTION_TWO,
                       style: TextStyle(
                         color: Color.fromRGBO(0, 0, 0, 0.4),
                         fontSize: TEXT_REGULAR - 1,
@@ -159,14 +160,14 @@ class SubscriptionTitleView extends StatelessWidget {
             Container(
               width: 10,
               height: 10,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: PRIMARY_COLOR,
                 shape: BoxShape.circle,
               ),
             ),
             SizedBox(width: MARGIN_MEDIUM),
-            Text(
-              "SUBSCRIPTIONS",
+            const Text(
+              CHAT_PAGE_TENCENT_SUBSCRIPTION_TITLE,
               style: TextStyle(
                 color: Color.fromRGBO(139, 139, 139, 1.0),
                 fontWeight: FontWeight.w600,
@@ -175,7 +176,7 @@ class SubscriptionTitleView extends StatelessWidget {
             ),
           ],
         ),
-        Icon(
+        const Icon(
           Icons.chevron_right,
           color: Color.fromRGBO(0, 0, 0, 0.6),
           size: MARGIN_XLARGE,
@@ -223,7 +224,7 @@ class _ChatListViewState extends State<ChatListView> {
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
-                  label: 'Delete',
+                  label: CHAT_DELETE_LABEL,
                 ),
               ],
             ),
