@@ -23,9 +23,9 @@ void insertOverlayForPostDetail(BuildContext context, MomentVO moment) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PosterNameView(userName: moment.userName ?? ""),
-                    SizedBox(height: MARGIN_MEDIUM_2),
+                    const SizedBox(height: MARGIN_MEDIUM_2),
                     PostDescriptionView(description: moment.description ?? ""),
-                    SizedBox(height: MARGIN_MEDIUM_2),
+                    const SizedBox(height: MARGIN_MEDIUM_2),
                     Visibility(
                       visible: (moment.postImage ?? "").isNotEmpty,
                       child: PostImageView(postImage: moment.postImage ?? ""),
@@ -195,7 +195,7 @@ class PostDescriptionView extends StatelessWidget {
       child: Text(
         description,
         style: const TextStyle(
-          color: Color.fromRGBO(98, 98, 98, 1.0),
+          color: Color.fromRGBO(114, 114, 114, 1.0),
           fontWeight: FontWeight.w500,
         ),
       ),

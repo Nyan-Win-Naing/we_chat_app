@@ -121,7 +121,7 @@ class LogoutButtonView extends StatelessWidget {
 class ProfileSettingsSectionView extends StatelessWidget {
   final Map<String, dynamic> settingsMap = {
     "Photos": Icons.insert_photo_outlined,
-    "Favourites": Icons.favorite,
+    "Favourites": Icons.favorite_border,
     "Wallet": Icons.account_balance_wallet_outlined,
     "Cards": Icons.credit_card,
     "Stickers": Icons.emoji_emotions_outlined,

@@ -220,8 +220,9 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      if (index == 0) _chooseMediaFromDevice(bloc);
-                      else if(index == 1) _takePhotoFromCamera(bloc);
+                      if (index == 0)
+                        _chooseMediaFromDevice(bloc);
+                      else if (index == 1) _takePhotoFromCamera(bloc);
                     },
                     child: ChatFunctionItemView(
                       icon: fValues[index],
@@ -248,7 +249,7 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
   void _takePhotoFromCamera(ChatRoomBloc bloc) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if(image != null) {
+    if (image != null) {
       bloc.onFileChosen(File(image.path));
     }
   }
@@ -275,20 +276,21 @@ class _ChosenFileViewState extends State<ChosenFileView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      height: 100,
-      decoration: BoxDecoration(
-          color: Color.fromRGBO(230, 230, 230, 1.0),
-          borderRadius: BorderRadius.circular(2),
-          border:
-              Border.all(color: Color.fromRGBO(213, 213, 213, 1.0), width: 2)),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(230, 230, 230, 1.0),
+        border: Border(
+          top: BorderSide(color: Color.fromRGBO(213, 213, 213, 1.0), width: 2),
+        ),
+      ),
+      padding: EdgeInsets.only(top: MARGIN_MEDIUM, bottom: MARGIN_MEDIUM, left: MARGIN_XXLARGE + MARGIN_MEDIUM, right: MARGIN_XXLARGE),
       child: Stack(
         children: [
           (widget.bloc.chosenImageFile != null)
               ? Image.file(
                   widget.bloc.chosenImageFile ?? File(""),
                   fit: BoxFit.cover,
-            width: 200,
+                  width: 200,
                 )
               : FlickVideoPlayer(
                   flickManager: FlickManager(
@@ -320,10 +322,10 @@ class ChosenFileRemover extends StatelessWidget {
       child: const Align(
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: MARGIN_SMALL, top: MARGIN_SMALL),
+          padding: EdgeInsets.only(top: MARGIN_SMALL, left: MARGIN_SMALL),
           child: Icon(
             Icons.close,
-            color: PRIMARY_COLOR,
+            color: HOME_SCREEEN_BACKGROUND_COLOR,
             // color: Colors.redAccent,
             size: MARGIN_MEDIUM_3,
           ),
