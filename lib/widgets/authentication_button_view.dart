@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/pages/sign_up_privacy_policy_page.dart';
 import 'package:we_chat_app/pages/we_chat_app.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 class AuthenticationButtonView extends StatelessWidget {
+
+  final bool isCheckTermsAndPolicy;
+
+
+  AuthenticationButtonView({required this.isCheckTermsAndPolicy});
 
   @override
   Widget build(BuildContext context) {
@@ -12,31 +18,31 @@ class AuthenticationButtonView extends StatelessWidget {
       height: 50,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
+          backgroundColor: MaterialStateProperty.all((isCheckTermsAndPolicy) ? PRIMARY_COLOR : Color.fromRGBO(255, 255, 255, 0.1)),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
             ),
           ),
         ),
-        onPressed: () {
-          _navigateToWeChatApp(context);
-        },
-        child: const Text(
+        onPressed: (isCheckTermsAndPolicy) ? () {
+          _navigateToPrivacyPolicyPage(context);
+        } : null,
+        child: Text(
           "Accept and Continue",
           style: TextStyle(
-            color: Colors.white,
+            color: (isCheckTermsAndPolicy) ? Colors.white : Color.fromRGBO(255, 255, 255, 0.2),
           ),
         ),
       ),
     );
   }
 
-  void _navigateToWeChatApp(BuildContext context) {
+  void _navigateToPrivacyPolicyPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WeChatApp(),
+        builder: (context) => SignUpPrivacyPolicyPage(),
       ),
     );
   }

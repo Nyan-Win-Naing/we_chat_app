@@ -118,7 +118,7 @@ class LoginBottomSectionView extends StatelessWidget {
       children: [
         const LogInDescriptionView(),
         const SizedBox(height: MARGIN_MEDIUM_2),
-        AuthenticationButtonView(),
+        AuthenticationButtonView(isCheckTermsAndPolicy: false,),
         const SizedBox(height: MARGIN_XLARGE + 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
