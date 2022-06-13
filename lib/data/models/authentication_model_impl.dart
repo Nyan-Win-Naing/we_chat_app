@@ -76,4 +76,10 @@ class AuthenticationModelImpl extends AuthenticationModel {
     return mDataAgent.getUserById(userId);
   }
 
+  @override
+  Future<void> addNewContact(UserVO userVo) {
+    // TODO: implement addNewContact
+    throw UnimplementedError();
+  }
+
 }

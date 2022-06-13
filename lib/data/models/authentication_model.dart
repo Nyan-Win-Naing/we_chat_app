@@ -21,4 +21,5 @@ abstract class AuthenticationModel {
 
   /// Other methods
   Stream<UserVO> getUserById(String userId);
+  Future<void> addNewContact(UserVO userVo);
 }

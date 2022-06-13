@@ -49,6 +49,8 @@ dependencies:
   video_player: ^2.4.4
   firebase_messaging: ^11.4.1
   firebase_auth: ^3.3.19
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.7.0
 
 dev_dependencies:
   flutter_test:

@@ -13,6 +13,7 @@ const momentCollection = "moment";
 const fileUploadRef = "uploads";
 
 const usersCollection = "users";
+const contactsCollection = "contacts";
 
 class CloudFirestoreDataAgentImpl extends WechatDataAgent {
   /// Firestore
@@ -126,5 +127,15 @@ class CloudFirestoreDataAgentImpl extends WechatDataAgent {
         .asStream()
         .where((documentSnapShot) => documentSnapShot.data() != null)
         .map((documentSnapShot) => UserVO.fromJson(documentSnapShot.data()!));
+  }
+
+  @override
+  Future<void> addNewContact(UserVO userVo) {
+    return _firestore
+        .collection(usersCollection)
+        .doc(getLoggedInUser().id ?? "")
+        .collection(contactsCollection)
+        .doc(userVo.id.toString())
+        .set(userVo.toJson());
   }
 }

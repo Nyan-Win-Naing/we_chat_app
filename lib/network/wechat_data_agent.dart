@@ -21,4 +21,5 @@ abstract class WechatDataAgent {
   UserVO getLoggedInUser();
   Future logOut();
   Stream<UserVO> getUserById(String userId);
+  Future<void> addNewContact(UserVO userVo);
 }

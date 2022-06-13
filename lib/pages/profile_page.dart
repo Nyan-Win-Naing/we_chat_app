@@ -4,7 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:we_chat_app/blocs/profile_bloc.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/pages/login_page.dart';
+import 'package:we_chat_app/pages/qr_code_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/resources/strings.dart';
@@ -46,20 +48,34 @@ class ProfilePage extends StatelessWidget {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.qr_code_2_outlined,
-                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                    size: MARGIN_LARGE,
-                  ),
-                  SizedBox(width: MARGIN_SMALL),
-                  Icon(
-                    Icons.chevron_right_outlined,
-                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                    size: MARGIN_XLARGE,
-                  ),
-                ],
+              child: Selector<ProfileBloc, UserVO?>(
+                selector: (context, bloc) => bloc.user,
+                builder: (context, user, child) =>
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QRCodePage(userVo: user),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.qr_code_2_outlined,
+                            color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                            size: MARGIN_LARGE,
+                          ),
+                          SizedBox(width: MARGIN_SMALL),
+                          Icon(
+                            Icons.chevron_right_outlined,
+                            color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                            size: MARGIN_XLARGE,
+                          ),
+                        ],
+                      ),
+                    ),
               ),
             ),
           ],
