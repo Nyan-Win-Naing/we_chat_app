@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: MARGIN_MEDIUM_3),
             GestureDetector(
               onTap: () {
-                if(!isLoginWithMail) {
+                if (!isLoginWithMail) {
                   showBottomSheet(context);
                 } else {
                   setState(() {
@@ -52,7 +52,10 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 }
               },
-              child: OtherLoginOptionsLabelView(label: (!isLoginWithMail) ? OTHER_LOGIN_OPTIONS : LOG_IN_VIA_MOBILE_NUMBER_WITH_SMALL_CAP),
+              child: OtherLoginOptionsLabelView(
+                  label: (!isLoginWithMail)
+                      ? OTHER_LOGIN_OPTIONS
+                      : LOG_IN_VIA_MOBILE_NUMBER_WITH_SMALL_CAP),
             ),
             const Spacer(),
             const LoginBottomSectionView(),
@@ -85,8 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pop(context);
                   });
                 },
-                child:
-                    ModalMenuItemView(text: LOG_IN_VIA_WECHAT_EMAIL_QQ),
+                child: ModalMenuItemView(text: LOG_IN_VIA_WECHAT_EMAIL_QQ),
               ),
               Container(
                 height: 1,
@@ -118,7 +120,10 @@ class LoginBottomSectionView extends StatelessWidget {
       children: [
         const LogInDescriptionView(),
         const SizedBox(height: MARGIN_MEDIUM_2),
-        AuthenticationButtonView(isCheckTermsAndPolicy: false,),
+        AuthenticationButtonView(
+          isButtonEnabled: false,
+          onTapNavigate: () {},
+        ),
         const SizedBox(height: MARGIN_XLARGE + 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +167,6 @@ class LogInDescriptionView extends StatelessWidget {
 }
 
 class OtherLoginOptionsLabelView extends StatelessWidget {
-
   final String label;
 
   OtherLoginOptionsLabelView({required this.label});
@@ -208,17 +212,26 @@ class LoginFieldsSectionView extends StatelessWidget {
                   label: COUNTRY_REGION_FIELD_LABEL,
                   hintText: "United State (+1)",
                   isTextField: false,
+                  onChanged: (country) {},
                 )
               : FormFieldView(
                   screenWidth: screenWidth,
                   label: ACCOUNT_FIELD_LABEL,
                   hintText: ACCOUNT_FIELD_HINT_TEXT,
+                  onChanged: (account) {},
                 ),
           const SizedBox(height: MARGIN_MEDIUM),
           FormFieldView(
             screenWidth: screenWidth,
-            label: (!isLoginWithMail) ? PHONE_FIELD_LABEL_TEXT : PASSWORD_FIELD_LABEL_TEXT,
-            hintText: (!isLoginWithMail) ? PHONE_FIELD_HINT_TEXT : PASSWORD_FIELD_HINT_TEXT,
+            label: (!isLoginWithMail)
+                ? PHONE_FIELD_LABEL_TEXT
+                : PASSWORD_FIELD_LABEL_TEXT,
+            hintText: (!isLoginWithMail)
+                ? PHONE_FIELD_HINT_TEXT
+                : PASSWORD_FIELD_HINT_TEXT,
+            onChanged: (password) {
+
+            },
           ),
         ],
       ),

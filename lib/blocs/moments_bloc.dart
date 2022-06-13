@@ -25,6 +25,12 @@ class MomentsBloc extends ChangeNotifier {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    isDisposed = true;
+  }
+
   void onTapDeletePost(int postId) async {
     await _mWechatModel.deletePost(postId);
   }

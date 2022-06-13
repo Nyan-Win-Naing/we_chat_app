@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:we_chat_app/blocs/profile_bloc.dart';
+import 'package:we_chat_app/pages/login_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/resources/strings.dart';
@@ -11,67 +14,85 @@ import 'package:we_chat_app/widgets/divider_with_height_six.dart';
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MOMENT_PAGE_BACKGROUND_COLOR,
-      appBar: AppBar(
-        backgroundColor: PRIMARY_COLOR,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        centerTitle: true,
-        title: Column(
-          children: const [
-            Text(
-              "Alberto Calvo",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: TEXT_REGULAR_2X,
-              ),
-            ),
-            Text(
-              "alberto203",
-              style: TextStyle(
-                color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                fontSize: TEXT_REGULAR,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.qr_code_2_outlined,
-                  color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                  size: MARGIN_LARGE,
+    return ChangeNotifierProvider(
+      create: (context) => ProfileBloc(),
+      child: Scaffold(
+        backgroundColor: MOMENT_PAGE_BACKGROUND_COLOR,
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          centerTitle: true,
+          title: Consumer<ProfileBloc>(
+            builder: (context, bloc, child) => Column(
+              children: [
+                Text(
+                  bloc.userName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: TEXT_REGULAR_2X,
+                  ),
                 ),
-                SizedBox(width: MARGIN_SMALL),
-                Icon(
-                  Icons.chevron_right_outlined,
-                  color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                  size: MARGIN_XLARGE,
+                Text(
+                  bloc.userName.replaceAll(" ", "").toLowerCase(),
+                  style: const TextStyle(
+                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                    fontSize: TEXT_REGULAR,
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const ProfileImageView(),
-              const ProfileBioTextSectionView(),
-              Container(
-                color: DIVIDER_SMALL_COLOR,
-                height: 1,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+              child: Row(
+                children: const [
+                  Icon(
+                    Icons.qr_code_2_outlined,
+                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                    size: MARGIN_LARGE,
+                  ),
+                  SizedBox(width: MARGIN_SMALL),
+                  Icon(
+                    Icons.chevron_right_outlined,
+                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                    size: MARGIN_XLARGE,
+                  ),
+                ],
               ),
-              ProfileSettingsSectionView(),
-              const DividerWithHeightSix(),
-              const SizedBox(height: MARGIN_MEDIUM_2),
-              const LogoutButtonView(),
-            ],
+            ),
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const ProfileImageView(),
+                const ProfileBioTextSectionView(),
+                Container(
+                  color: DIVIDER_SMALL_COLOR,
+                  height: 1,
+                ),
+                ProfileSettingsSectionView(),
+                const DividerWithHeightSix(),
+                const SizedBox(height: MARGIN_MEDIUM_2),
+                Consumer<ProfileBloc>(
+                  builder: (context, bloc, child) => LogoutButtonView(
+                    onTapLogout: () {
+                      bloc.onTapLogout().then(
+                            (_) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            ),
+                          );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -80,16 +101,18 @@ class ProfilePage extends StatelessWidget {
 }
 
 class LogoutButtonView extends StatelessWidget {
-  const LogoutButtonView({
-    Key? key,
-  }) : super(key: key);
+  final Function onTapLogout;
+
+  LogoutButtonView({required this.onTapLogout});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 180,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          onTapLogout();
+        },
         child: const Text(
           PROFILE_PAGE_LOG_OUT_TEXT,
           style: TextStyle(
@@ -98,8 +121,7 @@ class LogoutButtonView extends StatelessWidget {
           ),
         ),
         style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
@@ -207,19 +229,24 @@ class ProfileImageView extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.center,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(
+            child: Consumer<ProfileBloc>(
+              builder: (context, bloc, child) => Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  width: MARGIN_SMALL,
-                ),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                    "https://data.whicdn.com/images/339581930/original.jpg",
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: MARGIN_SMALL,
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      (bloc.profileImage.isNotEmpty)
+                          ? bloc.profileImage
+                          : "https://collegecore.com/wp-content/uploads/2018/05/facebook-no-profile-picture-icon-620x389.jpg",
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

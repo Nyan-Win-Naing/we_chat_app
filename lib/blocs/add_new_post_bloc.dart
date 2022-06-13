@@ -80,6 +80,12 @@ class AddNewPostBloc extends ChangeNotifier {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    isDisposed = true;
+  }
+
   void _prepopulateDataForEditMode(int momentId) {
     _model.getMomentById(momentId).listen((moment) {
       username = moment.userName ?? "";

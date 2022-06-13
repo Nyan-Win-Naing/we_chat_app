@@ -10,6 +10,8 @@ class FormFieldView extends StatefulWidget {
     this.phoneCode = "",
     this.isTextField = true,
     this.isPhoneField = false,
+    this.isPasswordField = false,
+    required this.onChanged,
   });
 
   final double screenWidth;
@@ -18,6 +20,8 @@ class FormFieldView extends StatefulWidget {
   final String phoneCode;
   bool isTextField;
   bool isPhoneField;
+  bool isPasswordField;
+  final Function(String) onChanged;
 
   @override
   State<FormFieldView> createState() => _FormFieldViewState();
@@ -62,6 +66,12 @@ class _FormFieldViewState extends State<FormFieldView> {
                         });
                       },
                       child: TextField(
+                        onChanged: (text) {
+                          widget.onChanged(text);
+                        },
+                        style: TextStyle(color: Colors.white),
+                        keyboardType: widget.isPhoneField ? TextInputType.number : null,
+                        obscureText: (widget.isPasswordField) ? true : false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: widget.hintText,

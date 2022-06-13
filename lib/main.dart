@@ -1,16 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/models/authentication_model_impl.dart';
+import 'package:we_chat_app/fcm/fcm_service.dart';
 import 'package:we_chat_app/pages/startup_page.dart';
 import 'package:we_chat_app/pages/we_chat_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  FCMService().getFcmToken();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final _authenticationModel = AuthenticationModelImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         unselectedWidgetColor: Color.fromRGBO(94, 94, 94, 1.0),
       ),
-      home: StartupPage(),
+      home: (_authenticationModel.isLoggedIn()) ? WeChatApp() : StartupPage(),
     );
   }
 }

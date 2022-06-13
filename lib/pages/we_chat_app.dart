@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/models/authentication_model_impl.dart';
 import 'package:we_chat_app/pages/add_new_post_page.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/pages/contact_page.dart';
@@ -28,6 +29,8 @@ class _WeChatAppState extends State<WeChatApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("Logged In user is: ${AuthenticationModelImpl().getLoggedInUser()} .......");
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: getScreen(bottomNavIndex),

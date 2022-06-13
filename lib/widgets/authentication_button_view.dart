@@ -5,11 +5,15 @@ import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 class AuthenticationButtonView extends StatelessWidget {
+  final bool isButtonEnabled;
+  String buttonLabel;
+  final Function onTapNavigate;
 
-  final bool isCheckTermsAndPolicy;
-
-
-  AuthenticationButtonView({required this.isCheckTermsAndPolicy});
+  AuthenticationButtonView({
+    required this.isButtonEnabled,
+    required this.onTapNavigate,
+    this.buttonLabel = "Accept and Continue",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +22,28 @@ class AuthenticationButtonView extends StatelessWidget {
       height: 50,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all((isCheckTermsAndPolicy) ? PRIMARY_COLOR : Color.fromRGBO(255, 255, 255, 0.1)),
+          backgroundColor: MaterialStateProperty.all((isButtonEnabled)
+              ? PRIMARY_COLOR
+              : Color.fromRGBO(255, 255, 255, 0.1)),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
             ),
           ),
         ),
-        onPressed: (isCheckTermsAndPolicy) ? () {
-          _navigateToPrivacyPolicyPage(context);
-        } : null,
+        onPressed: (isButtonEnabled)
+            ? () {
+                onTapNavigate();
+              }
+            : null,
         child: Text(
-          "Accept and Continue",
+          buttonLabel,
           style: TextStyle(
-            color: (isCheckTermsAndPolicy) ? Colors.white : Color.fromRGBO(255, 255, 255, 0.2),
+            color: (isButtonEnabled)
+                ? Colors.white
+                : Color.fromRGBO(255, 255, 255, 0.2),
           ),
         ),
-      ),
-    );
-  }
-
-  void _navigateToPrivacyPolicyPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SignUpPrivacyPolicyPage(),
       ),
     );
   }
