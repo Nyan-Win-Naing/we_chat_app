@@ -13,7 +13,7 @@ class TitleSectionForAuthentication extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: MARGIN_XXLARGE - 8),
       child: Text(
-        title,
+        "Log In via WeChat ID/Email/QQ ID",
         style: const TextStyle(
           color: AUTHENTICATION_PAGE_TITLE_TEXT_COLOR,
           fontSize: TEXT_REGULAR_3X,

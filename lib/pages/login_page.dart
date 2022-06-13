@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:we_chat_app/blocs/log_in_bloc.dart';
+import 'package:we_chat_app/pages/we_chat_app.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/resources/strings.dart';
 import 'package:we_chat_app/widgets/authentication_button_view.dart';
 import 'package:we_chat_app/widgets/form_field_view.dart';
+import 'package:we_chat_app/widgets/loading_view.dart';
 import 'package:we_chat_app/widgets/modal_menu_item_view.dart';
 import 'package:we_chat_app/widgets/title_section_for_authentication.dart';
 
@@ -13,53 +17,100 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool isLoginWithMail = false;
+  bool isLoginWithMail = true;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
-      appBar: AppBar(
-        elevation: 0,
+    return ChangeNotifierProvider(
+      create: (context) => LogInBloc(),
+      child: Scaffold(
         backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.close,
-            color: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      body: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TitleSectionForAuthentication(title: LOG_IN_VIA_MOBILE_NUMBER),
-            const SizedBox(height: MARGIN_XXLARGE),
-            LoginFieldsSectionView(
-                screenWidth: screenWidth, isLoginWithMail: isLoginWithMail),
-            const SizedBox(height: MARGIN_MEDIUM_3),
-            GestureDetector(
-              onTap: () {
-                if (!isLoginWithMail) {
-                  showBottomSheet(context);
-                } else {
-                  setState(() {
-                    isLoginWithMail = !isLoginWithMail;
-                  });
-                }
-              },
-              child: OtherLoginOptionsLabelView(
-                  label: (!isLoginWithMail)
-                      ? OTHER_LOGIN_OPTIONS
-                      : LOG_IN_VIA_MOBILE_NUMBER_WITH_SMALL_CAP),
+        body: Container(
+          child: Selector<LogInBloc, bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (context, isLoading, child) => Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TitleSectionForAuthentication(
+                          title: LOG_IN_VIA_MOBILE_NUMBER),
+                      const SizedBox(height: MARGIN_XXLARGE),
+                      LoginFieldsSectionView(
+                          screenWidth: screenWidth,
+                          isLoginWithMail: isLoginWithMail),
+                      const SizedBox(height: MARGIN_MEDIUM_3),
+                      GestureDetector(
+                        onTap: () {
+                          if (!isLoginWithMail) {
+                            showBottomSheet(context);
+                          } else {
+                            setState(() {
+                              isLoginWithMail = !isLoginWithMail;
+                            });
+                          }
+                        },
+                        child: OtherLoginOptionsLabelView(
+                            label: (!isLoginWithMail)
+                                ? OTHER_LOGIN_OPTIONS
+                                : LOG_IN_VIA_MOBILE_NUMBER_WITH_SMALL_CAP),
+                      ),
+                      SizedBox(height: MARGIN_3XLARGE * 4),
+                      Consumer<LogInBloc>(
+                        builder: (context, bloc, child) =>
+                            LoginBottomSectionView(
+                          onTapLogin: () {
+                            bloc
+                                .onTapLogin()
+                                .then(
+                                  (_) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WeChatApp(),
+                                    ),
+                                  ),
+                                )
+                                .catchError(
+                                  (error) => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                      content: Text(error.toString()),
+                                    ),
+                                  ),
+                                );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    color: Colors.black54,
+                    child: Center(
+                      child: LoadingView(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const Spacer(),
-            const LoginBottomSectionView(),
-          ],
+          ),
         ),
       ),
     );
@@ -109,9 +160,9 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class LoginBottomSectionView extends StatelessWidget {
-  const LoginBottomSectionView({
-    Key? key,
-  }) : super(key: key);
+  final Function onTapLogin;
+
+  LoginBottomSectionView({required this.onTapLogin});
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +171,14 @@ class LoginBottomSectionView extends StatelessWidget {
       children: [
         const LogInDescriptionView(),
         const SizedBox(height: MARGIN_MEDIUM_2),
-        AuthenticationButtonView(
-          isButtonEnabled: false,
-          onTapNavigate: () {},
+        Consumer<LogInBloc>(
+          builder: (context, bloc, child) => AuthenticationButtonView(
+            isButtonEnabled:
+                (bloc.email.isEmpty || bloc.password.isEmpty) ? false : true,
+            onTapNavigate: () {
+              onTapLogin();
+            },
+          ),
         ),
         const SizedBox(height: MARGIN_XLARGE + 8),
         Row(
@@ -214,24 +270,31 @@ class LoginFieldsSectionView extends StatelessWidget {
                   isTextField: false,
                   onChanged: (country) {},
                 )
-              : FormFieldView(
-                  screenWidth: screenWidth,
-                  label: ACCOUNT_FIELD_LABEL,
-                  hintText: ACCOUNT_FIELD_HINT_TEXT,
-                  onChanged: (account) {},
+              : Consumer<LogInBloc>(
+                  builder: (context, bloc, child) => FormFieldView(
+                    screenWidth: screenWidth,
+                    label: ACCOUNT_FIELD_LABEL,
+                    hintText: ACCOUNT_FIELD_HINT_TEXT,
+                    onChanged: (email) {
+                      bloc.onChangedEmail(email);
+                    },
+                  ),
                 ),
           const SizedBox(height: MARGIN_MEDIUM),
-          FormFieldView(
-            screenWidth: screenWidth,
-            label: (!isLoginWithMail)
-                ? PHONE_FIELD_LABEL_TEXT
-                : PASSWORD_FIELD_LABEL_TEXT,
-            hintText: (!isLoginWithMail)
-                ? PHONE_FIELD_HINT_TEXT
-                : PASSWORD_FIELD_HINT_TEXT,
-            onChanged: (password) {
-
-            },
+          Consumer<LogInBloc>(
+            builder: (context, bloc, child) => FormFieldView(
+              screenWidth: screenWidth,
+              isPasswordField: true,
+              label: (!isLoginWithMail)
+                  ? PHONE_FIELD_LABEL_TEXT
+                  : PASSWORD_FIELD_LABEL_TEXT,
+              hintText: (!isLoginWithMail)
+                  ? PHONE_FIELD_HINT_TEXT
+                  : PASSWORD_FIELD_HINT_TEXT,
+              onChanged: (password) {
+                bloc.onChangedPassword(password);
+              },
+            ),
           ),
         ],
       ),

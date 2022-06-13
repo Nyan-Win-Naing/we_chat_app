@@ -10,7 +10,7 @@ class LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black12,
+      color: Colors.black54,
       child: const Center(
         child: SizedBox(
           width: MARGIN_XXLARGE,
