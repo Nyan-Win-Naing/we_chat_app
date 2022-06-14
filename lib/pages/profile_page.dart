@@ -26,24 +26,27 @@ class ProfilePage extends StatelessWidget {
           elevation: 0,
           centerTitle: true,
           title: Consumer<ProfileBloc>(
-            builder: (context, bloc, child) => Column(
-              children: [
-                Text(
-                  bloc.userName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: TEXT_REGULAR_2X,
+            builder: (context, bloc, child) {
+              print("User from Profile bloc is  ${bloc.user}...........");
+              return Column(
+                children: [
+                  Text(
+                    bloc.userName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: TEXT_REGULAR_2X,
+                    ),
                   ),
-                ),
-                Text(
-                  bloc.userName.replaceAll(" ", "").toLowerCase(),
-                  style: const TextStyle(
-                    color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
-                    fontSize: TEXT_REGULAR,
+                  Text(
+                    bloc.userName.replaceAll(" ", "").toLowerCase(),
+                    style: const TextStyle(
+                      color: MOMENT_APP_BAR_LEADING_ICON_COLOR,
+                      fontSize: TEXT_REGULAR,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            },
           ),
           actions: [
             Padding(

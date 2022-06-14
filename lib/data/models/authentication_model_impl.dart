@@ -72,7 +72,7 @@ class AuthenticationModelImpl extends AuthenticationModel {
   }
 
   @override
-  Stream<UserVO> getUserById(String userId) {
+  Future<UserVO> getUserById(String userId) {
     return mDataAgent.getUserById(userId);
   }
 

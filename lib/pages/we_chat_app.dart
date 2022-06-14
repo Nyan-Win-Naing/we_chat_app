@@ -11,7 +11,11 @@ import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/resources/strings.dart';
 
 class WeChatApp extends StatefulWidget {
-  const WeChatApp({Key? key}) : super(key: key);
+
+  final int index;
+
+
+  WeChatApp({this.index = 0});
 
   @override
   State<WeChatApp> createState() => _WeChatAppState();
@@ -20,6 +24,12 @@ class WeChatApp extends StatefulWidget {
 class _WeChatAppState extends State<WeChatApp> {
 
   int bottomNavIndex = 0;
+
+  @override
+  void initState() {
+    bottomNavIndex = widget.index;
+    super.initState();
+  }
 
   void _onItemTapped(int index) {
     setState(() {

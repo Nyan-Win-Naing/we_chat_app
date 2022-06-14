@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/dummy/dummy_data_for_contact_page.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/contact_item_view.dart';
 
 class ContactItemByAlphabet extends StatelessWidget {
-
   final String alphabet;
+  final List<UserVO> usersList;
 
-
-  ContactItemByAlphabet({required this.alphabet});
+  ContactItemByAlphabet({required this.alphabet, required this.usersList});
 
   @override
   Widget build(BuildContext context) {
-    List<String> contactsByAlphabet = dummyContactList.where((element) => element[0] == alphabet).toList();
+    List<UserVO> contactsByAlphabet = usersList
+        .where((element) => (element.userName?[0] ?? "") == alphabet)
+        .toList();
     final screenHeight = MediaQuery.of(context).size.height;
     final avatarRadius = screenHeight / 25;
     return Column(
       children: [
-        AlphatbetAndTotalFriendsSectionView(alphabet: alphabet, count: contactsByAlphabet.length),
+        AlphatbetAndTotalFriendsSectionView(
+            alphabet: alphabet, count: contactsByAlphabet.length),
         Container(
           color: Color.fromRGBO(0, 0, 0, 0.05),
           height: 1.5,
@@ -32,14 +35,16 @@ class ContactItemByAlphabet extends StatelessWidget {
               onTap: () {
                 _navigateToChatRoomPage(context);
               },
-              child: ContactItemView(avatarRadius: avatarRadius, name: contactsByAlphabet[index]),
+              child: ContactItemView(
+                avatarRadius: avatarRadius,
+                user: contactsByAlphabet[index],
+              ),
             );
           },
         ),
       ],
     );
   }
-
 
   void _navigateToChatRoomPage(BuildContext context) {
     Navigator.push(
@@ -52,16 +57,14 @@ class ContactItemByAlphabet extends StatelessWidget {
 }
 
 class AlphatbetAndTotalFriendsSectionView extends StatelessWidget {
-
   final String alphabet;
   final int count;
 
-
-  AlphatbetAndTotalFriendsSectionView({required this.alphabet, required this.count});
+  AlphatbetAndTotalFriendsSectionView(
+      {required this.alphabet, required this.count});
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 60,
       color: Color.fromRGBO(242, 242, 242, 1.0),

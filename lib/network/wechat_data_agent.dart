@@ -20,6 +20,8 @@ abstract class WechatDataAgent {
   bool isLoggedIn();
   UserVO getLoggedInUser();
   Future logOut();
-  Stream<UserVO> getUserById(String userId);
-  Future<void> addNewContact(UserVO userVo);
+  Future<UserVO> getUserById(String userId);
+  Future<void> addNewContactToScanner(UserVO userVo);
+  Future<void> addNewContactToScannedUser(UserVO userVo);
+  Stream<List<UserVO>> getContactsOfLoggedInUser();
 }

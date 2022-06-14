@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
 class ContactItemView extends StatelessWidget {
   const ContactItemView({
     Key? key,
     required this.avatarRadius,
-    required this.name,
+    required this.user,
   }) : super(key: key);
 
   final double avatarRadius;
-  final String name;
+  final UserVO? user;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class ContactItemView extends StatelessWidget {
                 CircleAvatar(
                   radius: avatarRadius,
                   backgroundImage: NetworkImage(
-                    "https://1.bp.blogspot.com/-xkOa184EX9w/XVhTRa2WRQI/AAAAAAAAb1E/jPDX8jZ8mAIsqqNEDgb8lmfKbttdP1BDACLcBGAs/s1600/Profile-Picture-For-Boys%2B%252812%2529.jpg",
+                    ((user?.profilePicture ?? "").isNotEmpty) ? user?.profilePicture ?? "" : "https://collegecore.com/wp-content/uploads/2018/05/facebook-no-profile-picture-icon-620x389.jpg",
                   ),
                 ),
                 SizedBox(width: MARGIN_MEDIUM_3),
@@ -34,7 +35,7 @@ class ContactItemView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      user?.userName ?? "",
                       style: TextStyle(
                         fontSize: TEXT_REGULAR_3X,
                         fontWeight: FontWeight.w700,
@@ -42,7 +43,7 @@ class ContactItemView extends StatelessWidget {
                     ),
                     SizedBox(height: MARGIN_SMALL),
                     Text(
-                      "Fair Issac Corporation",
+                      "No Organization",
                       style: TextStyle(
                         color: Color.fromRGBO(191,191,191, 1.0),
                         fontSize: TEXT_REGULAR,

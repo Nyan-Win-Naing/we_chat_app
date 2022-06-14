@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:we_chat_app/data/models/wechat_model.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/network/cloud_firestore_data_agent_impl.dart';
 import 'package:we_chat_app/network/wechat_data_agent.dart';
 
@@ -87,5 +88,20 @@ class WechatModelImpl extends WechatModel {
     moment.postImage = imageUrl;
     moment.postVideo = videoUrl;
     return Future.value(moment);
+  }
+
+  @override
+  Future addNewContactToScanner(UserVO? userVo) {
+    return mDataAgent.addNewContactToScanner(userVo ?? UserVO());
+  }
+
+  @override
+  Future addNewContactToScannedUser(UserVO? scannedUser) {
+    return mDataAgent.addNewContactToScannedUser(scannedUser ?? UserVO());
+  }
+
+  @override
+  Stream<List<UserVO>> getContactsOfLoggedInUser() {
+    return mDataAgent.getContactsOfLoggedInUser();
   }
 }

@@ -20,6 +20,6 @@ abstract class AuthenticationModel {
   Future<void> logOut();
 
   /// Other methods
-  Stream<UserVO> getUserById(String userId);
+  Future<UserVO> getUserById(String userId);
   Future<void> addNewContact(UserVO userVo);
 }

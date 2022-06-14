@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/widgets.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/network/wechat_data_agent.dart';
@@ -119,23 +120,64 @@ class CloudFirestoreDataAgentImpl extends WechatDataAgent {
   }
 
   @override
-  Stream<UserVO> getUserById(String userId) {
-    return _firestore
-        .collection(usersCollection)
-        .doc(userId)
-        .get()
-        .asStream()
-        .where((documentSnapShot) => documentSnapShot.data() != null)
-        .map((documentSnapShot) => UserVO.fromJson(documentSnapShot.data()!));
+  Future<UserVO> getUserById(String userId) {
+    // return _firestore
+    //     .collection(usersCollection)
+    //     .doc(userId)
+    //     .get()
+    //     .asStream()
+    //     .where((documentSnapShot) => documentSnapShot.data() != null)
+    //     .map((documentSnapShot) => UserVO.fromJson(documentSnapShot.data()!));
+
+    return _firestore.collection(usersCollection).doc(userId).get().then(
+      (DocumentSnapshot documentSnapshot) {
+        return UserVO.fromJson(
+            documentSnapshot.data()! as Map<String, dynamic>);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
   }
 
   @override
-  Future<void> addNewContact(UserVO userVo) {
+  Future<void> addNewContactToScanner(UserVO userVo) {
     return _firestore
         .collection(usersCollection)
         .doc(getLoggedInUser().id ?? "")
         .collection(contactsCollection)
         .doc(userVo.id.toString())
         .set(userVo.toJson());
+  }
+
+  @override
+  Future<void> addNewContactToScannedUser(UserVO userVo) async {
+    var scannerId = getLoggedInUser().id ?? "";
+    UserVO scannerUser = UserVO();
+    await getUserById(scannerId).then((user) {
+      scannerUser = user;
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+
+    return _firestore
+        .collection(usersCollection)
+        .doc(userVo.id ?? "")
+        .collection(contactsCollection)
+        .doc(scannerId)
+        .set(scannerUser.toJson());
+  }
+
+  @override
+  Stream<List<UserVO>> getContactsOfLoggedInUser() {
+    String loggedInUserId = getLoggedInUser().id ?? "";
+    return _firestore
+        .collection(usersCollection)
+        .doc(loggedInUserId)
+        .collection(contactsCollection)
+        .snapshots()
+        .map((querySnapShot) {
+      return querySnapShot.docs.map<UserVO>((document) {
+        return UserVO.fromJson(document.data());
+      }).toList();
+    });
   }
 }

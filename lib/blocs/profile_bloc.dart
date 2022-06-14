@@ -34,7 +34,7 @@ class ProfileBloc extends ChangeNotifier {
   }
 
   void _prepopulateForProfilePage(String id) {
-    authModel.getUserById(id).listen((userVo) {
+    authModel.getUserById(id).then((userVo) {
       userName = userVo.userName ?? "";
       profileImage = userVo.profilePicture ?? "";
       qrCode = userVo.qrCode ?? "";
