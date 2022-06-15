@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:we_chat_app/data/vos/message_vo.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/data/vos/user_vo.dart';
 
@@ -13,4 +14,6 @@ abstract class WechatModel {
   Future addNewContactToScanner(UserVO? userVo);
   Future addNewContactToScannedUser(UserVO? scannedUser);
   Stream<List<UserVO>> getContactsOfLoggedInUser();
+  Future<void> sendNewMessage(UserVO userVo, String message, File? imageFile, File? videoFile);
+  Stream<List<MessageVO>> getMessages(String loggedInUserId, String sentUserId);
 }

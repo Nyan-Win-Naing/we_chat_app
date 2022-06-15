@@ -24,4 +24,6 @@ abstract class WechatDataAgent {
   Future<void> addNewContactToScanner(UserVO userVo);
   Future<void> addNewContactToScannedUser(UserVO userVo);
   Stream<List<UserVO>> getContactsOfLoggedInUser();
+
+
 }

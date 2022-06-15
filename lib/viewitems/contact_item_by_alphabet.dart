@@ -33,7 +33,7 @@ class ContactItemByAlphabet extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                _navigateToChatRoomPage(context);
+                _navigateToChatRoomPage(context, contactsByAlphabet[index]);
               },
               child: ContactItemView(
                 avatarRadius: avatarRadius,
@@ -46,11 +46,11 @@ class ContactItemByAlphabet extends StatelessWidget {
     );
   }
 
-  void _navigateToChatRoomPage(BuildContext context) {
+  void _navigateToChatRoomPage(BuildContext context, UserVO user) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatRoomPage(),
+        builder: (context) => ChatRoomPage(userVo: user),
       ),
     );
   }

@@ -7,13 +7,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:we_chat_app/blocs/chat_room_bloc.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/dummy/dummy_conversation_list.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/chat_function_item_view.dart';
 import 'package:we_chat_app/viewitems/message_item_view.dart';
+import 'package:we_chat_app/widgets/loading_view.dart';
 
 class ChatRoomPage extends StatefulWidget {
+  final UserVO userVo;
+
+  ChatRoomPage({required this.userVo});
+
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
@@ -23,88 +29,122 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
+    // print("User vo in chat room is.......... ${widget.userVo}");
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ChangeNotifierProvider(
-      create: (context) => ChatRoomBloc(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: PRIMARY_COLOR,
-          centerTitle: true,
-          leadingWidth: 260,
-          elevation: 1,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.chevron_left,
-                  color: Color.fromRGBO(255, 255, 255, 0.7),
-                  size: MARGIN_XLARGE + 8,
+      create: (context) => ChatRoomBloc(widget.userVo),
+      child: Selector<ChatRoomBloc, bool>(
+        selector: (context, bloc) => bloc.isLoading,
+        builder: (context, isLoading, child) => Stack(
+          children: [
+            Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: PRIMARY_COLOR,
+                centerTitle: true,
+                leadingWidth: 260,
+                elevation: 1,
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.chevron_left,
+                        color: Color.fromRGBO(255, 255, 255, 0.7),
+                        size: MARGIN_XLARGE + 8,
+                      ),
+                      Text(
+                        "WeChat",
+                        style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 0.5),
+                          fontSize: TEXT_REGULAR_2X,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  "WeChat",
+                title: Text(
+                  widget.userVo.userName ?? "",
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                    color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,
                   ),
                 ),
-              ],
-            ),
-          ),
-          title: const Text(
-            "Amie Deane",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: TEXT_REGULAR_2X,
-            ),
-          ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-              child: Icon(
-                Icons.person_outline_outlined,
-                color: Color.fromRGBO(255, 255, 255, 0.7),
-                size: MARGIN_LARGE + 6,
+                actions: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+                    child: Icon(
+                      Icons.person_outline_outlined,
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      size: MARGIN_LARGE + 6,
+                    ),
+                  ),
+                ],
+              ),
+              body: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Consumer<ChatRoomBloc>(
+                      builder: (context, bloc, child) => (bloc.messages?.isNotEmpty ?? false) ? ListView.separated(
+                        // reverse: true,
+                        padding: EdgeInsets.only(
+                          top: MARGIN_MEDIUM_2,
+                          bottom: (!isOpenFunctionView) ? MARGIN_3XLARGE : 250,
+                          left: MARGIN_MEDIUM_2,
+                          right: MARGIN_MEDIUM_2,
+                        ),
+                        itemCount: bloc.messages?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return MessageItemView(
+                            messageVo: bloc.messages?[index],
+                            bloc: bloc,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            height: 10,
+                          );
+                        },
+                      ) : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: MARGIN_LARGE),
+                          child: Text(
+                            "No Messages with ${widget.userVo.userName}",
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.5),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ChatTextFieldSectionView(
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        setState(() {
+                          isOpenFunctionView = !isOpenFunctionView;
+                        });
+                      },
+                      user: widget.userVo,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: ListView.separated(
-                // reverse: true,
-                padding: EdgeInsets.only(
-                  top: MARGIN_MEDIUM_2,
-                  bottom: (!isOpenFunctionView) ? MARGIN_3XLARGE : 250,
-                  left: MARGIN_MEDIUM_2,
-                  right: MARGIN_MEDIUM_2,
+            Visibility(
+              visible: isLoading,
+              child: Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: LoadingView(),
                 ),
-                itemCount: dummyConversationList.length,
-                itemBuilder: (context, index) {
-                  return MessageItemView(chatVo: dummyConversationList[index]);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    height: 10,
-                  );
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ChatTextFieldSectionView(
-                screenWidth: screenWidth,
-                onTap: () {
-                  setState(() {
-                    isOpenFunctionView = !isOpenFunctionView;
-                  });
-                },
               ),
             ),
           ],
@@ -119,10 +159,12 @@ class ChatTextFieldSectionView extends StatefulWidget {
     Key? key,
     required this.screenWidth,
     required this.onTap,
+    required this.user,
   }) : super(key: key);
 
   final double screenWidth;
   final Function onTap;
+  final UserVO? user;
 
   @override
   State<ChatTextFieldSectionView> createState() =>
@@ -142,6 +184,14 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
   };
 
   bool isShown = false;
+  FocusNode fNode = FocusNode();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    fNode.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +233,14 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                   color: Color.fromRGBO(108, 108, 108, 1.0),
                   size: MARGIN_XLARGE,
                 ),
-                ChatTextFieldView(screenWidth: widget.screenWidth),
+                ChatTextFieldView(
+                  screenWidth: widget.screenWidth,
+                  user: widget.user,
+                  focusNode: fNode,
+                  onTap: () {
+                    widget.onTap();
+                  },
+                ),
                 GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -220,9 +277,15 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      if (index == 0)
+                      if (index == 0) {
                         _chooseMediaFromDevice(bloc);
-                      else if (index == 1) _takePhotoFromCamera(bloc);
+                        fNode.requestFocus();
+                        isShown = false;
+                      } else if (index == 1) {
+                        _takePhotoFromCamera(bloc);
+                        fNode.requestFocus();
+                        isShown = false;
+                      }
                     },
                     child: ChatFunctionItemView(
                       icon: fValues[index],
@@ -283,7 +346,11 @@ class _ChosenFileViewState extends State<ChosenFileView> {
           top: BorderSide(color: Color.fromRGBO(213, 213, 213, 1.0), width: 2),
         ),
       ),
-      padding: EdgeInsets.only(top: MARGIN_MEDIUM, bottom: MARGIN_MEDIUM, left: MARGIN_XXLARGE + MARGIN_MEDIUM, right: MARGIN_XXLARGE),
+      padding: EdgeInsets.only(
+          top: MARGIN_MEDIUM,
+          bottom: MARGIN_MEDIUM,
+          left: MARGIN_XXLARGE + MARGIN_MEDIUM,
+          right: MARGIN_XXLARGE),
       child: Stack(
         children: [
           (widget.bloc.chosenImageFile != null)
@@ -336,48 +403,69 @@ class ChosenFileRemover extends StatelessWidget {
 }
 
 class ChatTextFieldView extends StatelessWidget {
-  const ChatTextFieldView({
-    Key? key,
+  ChatTextFieldView({
     required this.screenWidth,
-  }) : super(key: key);
+    required this.user,
+    required this.focusNode,
+    required this.onTap,
+  });
 
   final double screenWidth;
+  final UserVO? user;
+  final FocusNode focusNode;
+  final Function onTap;
+
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(MARGIN_SMALL),
-        border: Border.all(color: Color.fromRGBO(225, 225, 225, 1.0), width: 2),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: screenWidth * 1.6 / 3,
-            child: TextField(
-              minLines: 1,
-              maxLines: 3,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Message...",
-                hintStyle: TextStyle(
-                  color: Color.fromRGBO(218, 218, 218, 1.0),
+    return Consumer<ChatRoomBloc>(
+      builder: (context, bloc, child) => Container(
+        padding: EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(MARGIN_SMALL),
+          border:
+              Border.all(color: Color.fromRGBO(225, 225, 225, 1.0), width: 2),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: screenWidth * 1.6 / 3,
+              child: TextField(
+                controller: _controller,
+                textInputAction: TextInputAction.send,
+                focusNode: focusNode,
+                onSubmitted: (value) {
+                  bloc.onSendMessage(user ?? UserVO());
+                  _controller.clear();
+                  onTap();
+                },
+                onChanged: (message) {
+                  bloc.onMessageChanged(message);
+                },
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Message...",
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(218, 218, 218, 1.0),
+                  ),
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: 0, vertical: MARGIN_MEDIUM),
                 ),
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: 0, vertical: MARGIN_MEDIUM),
               ),
             ),
-          ),
-          SizedBox(width: MARGIN_SMALL),
-          Icon(
-            Icons.emoji_emotions,
-            color: Color.fromRGBO(108, 108, 108, 1.0),
-            size: MARGIN_XLARGE,
-          ),
-        ],
+            SizedBox(width: MARGIN_SMALL),
+            Icon(
+              Icons.emoji_emotions,
+              color: Color.fromRGBO(108, 108, 108, 1.0),
+              size: MARGIN_XLARGE,
+            ),
+          ],
+        ),
       ),
     );
   }

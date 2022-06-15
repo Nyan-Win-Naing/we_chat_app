@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/dummy/chat_vo.dart';
 import 'package:we_chat_app/dummy/dummy_chat_list.dart';
 import 'package:we_chat_app/pages/chat_room_page.dart';
@@ -242,7 +243,7 @@ class _ChatListViewState extends State<ChatListView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatRoomPage(),
+        builder: (context) => ChatRoomPage(userVo: UserVO(),),
       ),
     );
   }
