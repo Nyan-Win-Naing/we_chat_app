@@ -103,43 +103,43 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     Positioned.fill(
                       child: Consumer<ChatRoomBloc>(
                         builder: (context, bloc, child) =>
-                            (bloc.messages?.isNotEmpty ?? false)
-                                ? ListView.separated(
-                                    // reverse: true,
-                                    padding: EdgeInsets.only(
-                                      top: MARGIN_MEDIUM_2,
-                                      bottom: (!isOpenFunctionView)
-                                          ? MARGIN_3XLARGE
-                                          : 250,
-                                      left: MARGIN_MEDIUM_2,
-                                      right: MARGIN_MEDIUM_2,
-                                    ),
-                                    itemCount: bloc.messages?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      return MessageItemView(
-                                        messageVo: bloc.messages?[index],
-                                        bloc: bloc,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const SizedBox(
-                                        height: 10,
-                                      );
-                                    },
-                                  )
-                                : Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: MARGIN_LARGE),
-                                      child: Text(
-                                        "No Messages with ${widget.userVo.userName}",
-                                        style: TextStyle(
-                                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                        (bloc.messages?.isNotEmpty ?? false)
+                            ? ListView.separated(
+                          // reverse: true,
+                          padding: EdgeInsets.only(
+                            top: MARGIN_MEDIUM_2,
+                            bottom: (!isOpenFunctionView)
+                                ? MARGIN_3XLARGE
+                                : 250,
+                            left: MARGIN_MEDIUM_2,
+                            right: MARGIN_MEDIUM_2,
+                          ),
+                          itemCount: bloc.messages?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return MessageItemView(
+                              messageVo: bloc.messages?[index],
+                              bloc: bloc,
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                        )
+                            : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: MARGIN_LARGE),
+                            child: Text(
+                              "No Messages with ${widget.userVo.userName}",
+                              style: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 0.5),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Align(
@@ -225,8 +225,8 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
         children: [
           (bloc.chosenImageFile != null || bloc.chosenVideoFile != null)
               ? ChosenFileView(
-                  bloc: bloc,
-                )
+            bloc: bloc,
+          )
               : Container(),
           Container(
             padding: const EdgeInsets.symmetric(
@@ -269,15 +269,15 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                   },
                   child: (!isShown)
                       ? const Icon(
-                          Icons.add,
-                          color: Color.fromRGBO(108, 108, 108, 1.0),
-                          size: MARGIN_XLARGE,
-                        )
+                    Icons.add,
+                    color: Color.fromRGBO(108, 108, 108, 1.0),
+                    size: MARGIN_XLARGE,
+                  )
                       : const Icon(
-                          Icons.close,
-                          color: Color.fromRGBO(108, 108, 108, 1.0),
-                          size: MARGIN_XLARGE,
-                        ),
+                    Icons.close,
+                    color: Color.fromRGBO(108, 108, 108, 1.0),
+                    size: MARGIN_XLARGE,
+                  ),
                 ),
               ],
             ),
@@ -299,12 +299,12 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                     onTap: () {
                       if (index == 0) {
                         _chooseMediaFromDevice(bloc);
-                        fNode.requestFocus();
-                        isShown = false;
+                        isShown = !isShown;
+                        FocusScope.of(context).requestFocus(fNode);
                       } else if (index == 1) {
                         _takePhotoFromCamera(bloc);
-                        fNode.requestFocus();
-                        isShown = false;
+                        FocusScope.of(context).requestFocus(fNode);
+                        isShown = !isShown;
                       }
                     },
                     child: ChatFunctionItemView(
@@ -327,6 +327,7 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
       File file = File(result.files.single.path ?? "");
       bloc.onFileChosen(file);
     }
+
   }
 
   void _takePhotoFromCamera(ChatRoomBloc bloc) async {
@@ -375,16 +376,16 @@ class _ChosenFileViewState extends State<ChosenFileView> {
         children: [
           (widget.bloc.chosenImageFile != null)
               ? Image.file(
-                  widget.bloc.chosenImageFile ?? File(""),
-                  fit: BoxFit.cover,
-                  width: 200,
-                )
+            widget.bloc.chosenImageFile ?? File(""),
+            fit: BoxFit.cover,
+            width: 200,
+          )
               : FlickVideoPlayer(
-                  flickManager: FlickManager(
-                    videoPlayerController: VideoPlayerController.file(
-                        widget.bloc.chosenVideoFile ?? File("")),
-                  ),
-                ),
+            flickManager: FlickManager(
+              videoPlayerController: VideoPlayerController.file(
+                  widget.bloc.chosenVideoFile ?? File("")),
+            ),
+          ),
           ChosenFileRemover(bloc: widget.bloc),
         ],
       ),
@@ -446,17 +447,18 @@ class ChatTextFieldView extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(MARGIN_SMALL),
           border:
-              Border.all(color: Color.fromRGBO(225, 225, 225, 1.0), width: 2),
+          Border.all(color: Color.fromRGBO(225, 225, 225, 1.0), width: 2),
         ),
         child: Row(
           children: [
             Container(
               width: screenWidth * 1.6 / 3,
-              child: TextField(
-                controller: _controller,
+              child: TextFormField(
+                controller: _controller..text = bloc.message ..selection = TextSelection.collapsed(offset: _controller.text.length),
                 textInputAction: TextInputAction.send,
                 focusNode: focusNode,
-                onSubmitted: (value) {
+                autofocus: true,
+                onFieldSubmitted: (value) {
                   bloc.onSendMessage(user ?? UserVO());
                   _controller.clear();
                   onTap();

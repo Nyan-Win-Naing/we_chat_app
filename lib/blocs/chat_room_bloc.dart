@@ -101,4 +101,9 @@ class ChatRoomBloc extends ChangeNotifier {
   Future<void> _sendNewMessage(UserVO userVo) {
     return weChatModel.sendNewMessage(userVo, message, chosenImageFile, chosenVideoFile);
   }
+
+  void onChangeIsShownFunctionBar() {
+    isShownFunctionBar = !isShownFunctionBar;
+    _notifySafely();
+  }
 }
