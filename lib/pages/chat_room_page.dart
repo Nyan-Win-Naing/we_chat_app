@@ -9,6 +9,8 @@ import 'package:video_player/video_player.dart';
 import 'package:we_chat_app/blocs/chat_room_bloc.dart';
 import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/dummy/dummy_conversation_list.dart';
+import 'package:we_chat_app/pages/home_page.dart';
+import 'package:we_chat_app/pages/we_chat_app.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 import 'package:we_chat_app/viewitems/chat_function_item_view.dart';
@@ -37,117 +39,135 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       create: (context) => ChatRoomBloc(widget.userVo),
       child: Selector<ChatRoomBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
-        builder: (context, isLoading, child) => Stack(
-          children: [
-            Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                backgroundColor: PRIMARY_COLOR,
-                centerTitle: true,
-                leadingWidth: 260,
-                elevation: 1,
-                leading: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    children: const [
-                      Icon(
-                        Icons.chevron_left,
-                        color: Color.fromRGBO(255, 255, 255, 0.7),
-                        size: MARGIN_XLARGE + 8,
-                      ),
-                      Text(
-                        "WeChat",
-                        style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: TEXT_REGULAR_2X,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                title: Text(
-                  widget.userVo.userName ?? "",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: TEXT_REGULAR_2X,
-                  ),
-                ),
-                actions: const [
-                  Padding(
-                    padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-                    child: Icon(
-                      Icons.person_outline_outlined,
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      size: MARGIN_LARGE + 6,
-                    ),
-                  ),
-                ],
+        builder: (context, isLoading, child) => WillPopScope(
+          onWillPop: () async {
+            print("Pop works................");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WeChatApp(index: 0),
               ),
-              body: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Consumer<ChatRoomBloc>(
-                      builder: (context, bloc, child) => (bloc.messages?.isNotEmpty ?? false) ? ListView.separated(
-                        // reverse: true,
-                        padding: EdgeInsets.only(
-                          top: MARGIN_MEDIUM_2,
-                          bottom: (!isOpenFunctionView) ? MARGIN_3XLARGE : 250,
-                          left: MARGIN_MEDIUM_2,
-                          right: MARGIN_MEDIUM_2,
+            );
+            return false;
+          },
+          child: Stack(
+            children: [
+              Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  backgroundColor: PRIMARY_COLOR,
+                  centerTitle: true,
+                  leadingWidth: 260,
+                  elevation: 1,
+                  leading: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.chevron_left,
+                          color: Color.fromRGBO(255, 255, 255, 0.7),
+                          size: MARGIN_XLARGE + 8,
                         ),
-                        itemCount: bloc.messages?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return MessageItemView(
-                            messageVo: bloc.messages?[index],
-                            bloc: bloc,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            height: 10,
-                          );
-                        },
-                      ) : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: MARGIN_LARGE),
-                          child: Text(
-                            "No Messages with ${widget.userVo.userName}",
-                            style: TextStyle(
-                              color: Color.fromRGBO(0, 0, 0, 0.5),
-                              fontWeight: FontWeight.w500,
-                            ),
+                        Text(
+                          "WeChat",
+                          style: TextStyle(
+                            color: Color.fromRGBO(255, 255, 255, 0.5),
+                            fontSize: TEXT_REGULAR_2X,
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  title: Text(
+                    widget.userVo.userName ?? "",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: TEXT_REGULAR_2X,
+                    ),
+                  ),
+                  actions: const [
+                    Padding(
+                      padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+                      child: Icon(
+                        Icons.person_outline_outlined,
+                        color: Color.fromRGBO(255, 255, 255, 0.7),
+                        size: MARGIN_LARGE + 6,
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ChatTextFieldSectionView(
-                      screenWidth: screenWidth,
-                      onTap: () {
-                        setState(() {
-                          isOpenFunctionView = !isOpenFunctionView;
-                        });
-                      },
-                      user: widget.userVo,
+                  ],
+                ),
+                body: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Consumer<ChatRoomBloc>(
+                        builder: (context, bloc, child) =>
+                            (bloc.messages?.isNotEmpty ?? false)
+                                ? ListView.separated(
+                                    // reverse: true,
+                                    padding: EdgeInsets.only(
+                                      top: MARGIN_MEDIUM_2,
+                                      bottom: (!isOpenFunctionView)
+                                          ? MARGIN_3XLARGE
+                                          : 250,
+                                      left: MARGIN_MEDIUM_2,
+                                      right: MARGIN_MEDIUM_2,
+                                    ),
+                                    itemCount: bloc.messages?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return MessageItemView(
+                                        messageVo: bloc.messages?[index],
+                                        bloc: bloc,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(
+                                        height: 10,
+                                      );
+                                    },
+                                  )
+                                : Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: MARGIN_LARGE),
+                                      child: Text(
+                                        "No Messages with ${widget.userVo.userName}",
+                                        style: TextStyle(
+                                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: isLoading,
-              child: Container(
-                color: Colors.black54,
-                child: const Center(
-                  child: LoadingView(),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ChatTextFieldSectionView(
+                        screenWidth: screenWidth,
+                        onTap: () {
+                          setState(() {
+                            isOpenFunctionView = !isOpenFunctionView;
+                          });
+                        },
+                        user: widget.userVo,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Visibility(
+                visible: isLoading,
+                child: Container(
+                  color: Colors.black54,
+                  child: const Center(
+                    child: LoadingView(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

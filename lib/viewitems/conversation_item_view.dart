@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat_app/data/vos/conversation_vo_for_home_page.dart';
 import 'package:we_chat_app/dummy/chat_vo.dart';
 import 'package:we_chat_app/resources/dimens.dart';
 
@@ -6,11 +7,11 @@ class ConversationItemView extends StatelessWidget {
   const ConversationItemView({
     Key? key,
     required this.avatarRadius,
-    required this.chatVo,
+    required this.conversation,
   }) : super(key: key);
 
   final double avatarRadius;
-  final ChatVO chatVo;
+  final ConversationVOForHomePage conversation;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class ConversationItemView extends StatelessWidget {
                 CircleAvatar(
                   radius: avatarRadius,
                   backgroundImage: NetworkImage(
-                    chatVo.profile ?? "",
+                    ((conversation.profileImage ?? "").isNotEmpty) ? conversation.profileImage ?? "" : "https://collegecore.com/wp-content/uploads/2018/05/facebook-no-profile-picture-icon-620x389.jpg",
                   ),
                 ),
                 SizedBox(width: MARGIN_MEDIUM),
@@ -43,7 +44,7 @@ class ConversationItemView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            chatVo.name ?? "",
+                            conversation.name ?? "",
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: TEXT_REGULAR_2X,
@@ -61,7 +62,7 @@ class ConversationItemView extends StatelessWidget {
                       ),
                       SizedBox(height: MARGIN_MEDIUM),
                       Text(
-                        chatVo.lastConversationText ?? "",
+                        conversation.lastMessage ?? "",
                         maxLines: 2,
                         style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.4),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:we_chat_app/blocs/home_bloc.dart';
+import 'package:we_chat_app/data/vos/conversation_vo_for_home_page.dart';
 import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/dummy/chat_vo.dart';
 import 'package:we_chat_app/dummy/dummy_chat_list.dart';
@@ -21,57 +24,61 @@ class _HomePageState extends State<HomePage> {
     final screenHeight = MediaQuery.of(context).size.height;
     final avatarRadius = screenHeight / 22;
 
-    return Scaffold(
-      backgroundColor: HOME_SCREEEN_BACKGROUND_COLOR,
-      appBar: AppBar(
-        backgroundColor: PRIMARY_COLOR,
-        elevation: 1,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          HOME_PAEG_TITLE,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: TEXT_REGULAR_2X,
-          ),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-            child: Icon(
-              Icons.add,
-              color: APP_BAR_ACTION_ICON_COLOR,
-              size: MARGIN_XLARGE,
+    return ChangeNotifierProvider(
+      create: (context) => HomeBloc(),
+      child: Scaffold(
+        backgroundColor: HOME_SCREEEN_BACKGROUND_COLOR,
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          elevation: 1,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            HOME_PAEG_TITLE,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: TEXT_REGULAR_2X,
             ),
           ),
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ChatListView(
-                avatarRadius: avatarRadius,
-                onTapDeleteChat: (chatVo) {
-                  setState(() {
-                    dummyChatList.remove(chatVo);
-                  });
-                },
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+              child: Icon(
+                Icons.add,
+                color: APP_BAR_ACTION_ICON_COLOR,
+                size: MARGIN_XLARGE,
               ),
-              const DividerWithHeightSix(),
-              SizedBox(height: MARGIN_LARGE),
-              const SubscriptionSectionView(),
-              const DividerWithHeightSix(),
-              SizedBox(height: MARGIN_LARGE),
-              ChatListView(
-                avatarRadius: avatarRadius,
-                onTapDeleteChat: (chatVo) {
-                  setState(() {
-                    dummyChatList.remove(chatVo);
-                  });
-                },
-              ),
-            ],
+            ),
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+
+                ChatListView(
+                  avatarRadius: avatarRadius,
+                  onTapDeleteChat: (chatVo) {
+                    setState(() {
+                      dummyChatList.remove(chatVo);
+                    });
+                  },
+                ),
+                const DividerWithHeightSix(),
+                SizedBox(height: MARGIN_LARGE),
+                const SubscriptionSectionView(),
+                const DividerWithHeightSix(),
+                // SizedBox(height: MARGIN_LARGE),
+                // ChatListView(
+                //   avatarRadius: avatarRadius,
+                //   onTapDeleteChat: (chatVo) {
+                //     setState(() {
+                //       dummyChatList.remove(chatVo);
+                //     });
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
       ),
@@ -204,46 +211,51 @@ class ChatListView extends StatefulWidget {
 class _ChatListViewState extends State<ChatListView> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: dummyChatList.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            _navigateToConversationPage(context);
-          },
-          child: Slidable(
-            key: const ValueKey(0),
-            endActionPane: ActionPane(
-              motion: ScrollMotion(),
-              children: [
-                SlidableAction(
-                  onPressed: (_) {
-                    widget.onTapDeleteChat(dummyChatList[index]);
-                  },
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  icon: Icons.delete,
-                  label: CHAT_DELETE_LABEL,
+    return Consumer<HomeBloc>(
+      builder: (context, bloc, child) {
+        return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: bloc.conversationList.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                _navigateToConversationPage(context, bloc.conversationList[index].userVo);
+              },
+              child: Slidable(
+                key: const ValueKey(0),
+                endActionPane: ActionPane(
+                  motion: ScrollMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (_) {
+                        print("Click Clicksss");
+                        bloc.onTapDeleteConversation(bloc.conversationList[index].conversationId ?? "");
+                      },
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                      label: CHAT_DELETE_LABEL,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: ConversationItemView(
-              avatarRadius: widget.avatarRadius,
-              chatVo: dummyChatList[index],
-            ),
-          ),
+                child:  ConversationItemView(
+                    avatarRadius: widget.avatarRadius,
+                    conversation: bloc.conversationList[index],
+                  )
+              ),
+            );
+          },
         );
-      },
+      }
     );
   }
 
-  void _navigateToConversationPage(BuildContext context) {
+  void _navigateToConversationPage(BuildContext context, UserVO? userVo) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatRoomPage(userVo: UserVO(),),
+        builder: (context) => ChatRoomPage(userVo: userVo ?? UserVO()),
       ),
     );
   }

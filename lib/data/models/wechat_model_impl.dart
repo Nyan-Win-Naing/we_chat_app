@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:we_chat_app/data/models/authentication_model.dart';
 import 'package:we_chat_app/data/models/authentication_model_impl.dart';
 import 'package:we_chat_app/data/models/wechat_model.dart';
+import 'package:we_chat_app/data/vos/conversation_vo_for_home_page.dart';
 import 'package:we_chat_app/data/vos/message_vo.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
 import 'package:we_chat_app/data/vos/user_vo.dart';
@@ -126,15 +127,16 @@ class WechatModelImpl extends WechatModel {
           .uploadFileToFirebase(imageFile)
           .then((downloadUrl) => craftNewMessageVo(message, downloadUrl, ""))
           .then((newMessage) =>
-          mChatDataAgent.sendNewMessage(newMessage, userVo));
-    } else if(videoFile != null) {
+              mChatDataAgent.sendNewMessage(newMessage, userVo));
+    } else if (videoFile != null) {
       return mDataAgent
           .uploadFileToFirebase(videoFile)
           .then((downloadUrl) => craftNewMessageVo(message, "", downloadUrl))
-          .then((newMessage) => mChatDataAgent.sendNewMessage(newMessage, userVo));
+          .then((newMessage) =>
+              mChatDataAgent.sendNewMessage(newMessage, userVo));
     } else {
-      return craftNewMessageVo(message, "", "")
-          .then((newMessage) => mChatDataAgent.sendNewMessage(newMessage, userVo));
+      return craftNewMessageVo(message, "", "").then(
+          (newMessage) => mChatDataAgent.sendNewMessage(newMessage, userVo));
     }
   }
 
@@ -157,7 +159,25 @@ class WechatModelImpl extends WechatModel {
   }
 
   @override
-  Stream<List<MessageVO>> getMessages(String loggedInUserId, String sentUserId) {
+  Stream<List<MessageVO>> getMessages(
+      String loggedInUserId, String sentUserId) {
     return mChatDataAgent.getMessages(loggedInUserId, sentUserId);
+  }
+
+  @override
+  Stream<List<Future<ConversationVOForHomePage>>> getConversations(
+      String loggedInUserId) {
+    return mChatDataAgent.getConversations(loggedInUserId);
+  }
+
+  @override
+  Future<void> deleteConversation(
+      String loggedInUserId, String conversationId) {
+    return mChatDataAgent
+        .deleteConversationFromLoggedInUser(loggedInUserId, conversationId)
+        .then((_) {
+      mChatDataAgent.deleteConversationFromChatUser(
+          loggedInUserId, conversationId);
+    });
   }
 }
