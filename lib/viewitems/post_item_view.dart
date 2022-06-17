@@ -120,7 +120,7 @@ class PostHeaderSectionView extends StatelessWidget {
                     CircleAvatar(
                       radius: avatarRadius,
                       backgroundImage: NetworkImage(
-                        profileImage,
+                        (profileImage.isNotEmpty) ? profileImage : "https://collegecore.com/wp-content/uploads/2018/05/facebook-no-profile-picture-icon-620x389.jpg",
                       ),
                     ),
                     SizedBox(width: MARGIN_CARD_MEDIUM_2),

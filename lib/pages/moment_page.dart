@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:we_chat_app/blocs/moments_bloc.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
+import 'package:we_chat_app/data/vos/user_vo.dart';
 import 'package:we_chat_app/pages/add_new_post_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
@@ -71,7 +72,14 @@ class MomentPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const MomentPageProfileSectionView(),
+                Selector<MomentsBloc, UserVO?>(
+                  selector: (context, bloc) => bloc.userVo,
+                  builder: (context, user, child) =>
+                      MomentPageProfileSectionView(
+                    username: user?.userName ?? "",
+                    profileImage: user?.profilePicture ?? "",
+                  ),
+                ),
                 Selector<MomentsBloc, List<MomentVO>>(
                   selector: (context, bloc) => bloc.moments ?? [],
                   builder: (context, moments, child) => ListView.builder(
@@ -126,9 +134,11 @@ class MomentPage extends StatelessWidget {
 }
 
 class MomentPageProfileSectionView extends StatelessWidget {
-  const MomentPageProfileSectionView({
-    Key? key,
-  }) : super(key: key);
+  String profileImage;
+  String username;
+
+  MomentPageProfileSectionView(
+      {required this.profileImage, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -140,13 +150,15 @@ class MomentPageProfileSectionView extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child:
-                ProfileBackgroundImageSectionView(screenHeight: screenHeight),
+            child: ProfileBackgroundImageSectionView(
+              screenHeight: screenHeight,
+              userName: username,
+            ),
           ),
-          const Positioned(
+          Positioned(
             bottom: MARGIN_MEDIUM_2,
             left: 100,
-            child: ProfilePhotoView(),
+            child: ProfilePhotoView(profileImage: profileImage),
           ),
           const Align(
             alignment: Alignment.bottomRight,
@@ -193,9 +205,9 @@ class DateAndMomentsCountView extends StatelessWidget {
 }
 
 class ProfilePhotoView extends StatelessWidget {
-  const ProfilePhotoView({
-    Key? key,
-  }) : super(key: key);
+  final String profileImage;
+
+  ProfilePhotoView({required this.profileImage});
 
   @override
   Widget build(BuildContext context) {
@@ -205,11 +217,15 @@ class ProfilePhotoView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey,
         shape: BoxShape.circle,
-        border: Border.all(color: MOMENT_PAGE_PROFILE_PHOTO_BORDER_COLOR, width: 2),
-        image: const DecorationImage(
+        border:
+            Border.all(color: MOMENT_PAGE_PROFILE_PHOTO_BORDER_COLOR, width: 2),
+        image: DecorationImage(
           image: NetworkImage(
-            "https://i.pinimg.com/236x/4e/9f/03/4e9f035d05faeb0561835197a51a51f5.jpg",
+            (profileImage.isNotEmpty)
+                ? profileImage
+                : "https://collegecore.com/wp-content/uploads/2018/05/facebook-no-profile-picture-icon-620x389.jpg",
           ),
+          fit: BoxFit.cover
         ),
       ),
     );
@@ -220,9 +236,11 @@ class ProfileBackgroundImageSectionView extends StatelessWidget {
   const ProfileBackgroundImageSectionView({
     Key? key,
     required this.screenHeight,
+    required this.userName,
   }) : super(key: key);
 
   final double screenHeight;
+  final String userName;
 
   @override
   Widget build(BuildContext context) {
@@ -239,15 +257,15 @@ class ProfileBackgroundImageSectionView extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                       right: MARGIN_CARD_MEDIUM_2,
                       bottom: MARGIN_CARD_MEDIUM_2),
                   child: Text(
-                    "Nina Rocha",
-                    style: TextStyle(
+                    userName,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: TEXT_REGULAR_2X,
                       fontWeight: FontWeight.w600,

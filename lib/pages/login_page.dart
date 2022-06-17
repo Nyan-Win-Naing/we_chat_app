@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:we_chat_app/blocs/log_in_bloc.dart';
+import 'package:we_chat_app/pages/startup_page.dart';
 import 'package:we_chat_app/pages/we_chat_app.dart';
 import 'package:we_chat_app/resources/colors.dart';
 import 'package:we_chat_app/resources/dimens.dart';
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
           leading: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              _navigateToStartUpPage(context);
             },
             child: const Icon(
               Icons.close,
@@ -112,6 +113,15 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToStartUpPage(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StartupPage(),
       ),
     );
   }

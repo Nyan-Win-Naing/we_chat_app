@@ -36,34 +36,33 @@ class WechatModelImpl extends WechatModel {
 
   @override
   Future<void> addNewMoment(
-      String description, File? imageFile, File? videoFile) {
+      String description, File? imageFile, File? videoFile, String userName, String profileImage) {
     if (imageFile != null) {
       return mDataAgent
           .uploadFileToFirebase(imageFile)
-          .then((downloadUrl) => craftMomentVO(description, downloadUrl, ""))
+          .then((downloadUrl) => craftMomentVO(description, downloadUrl, "", userName, profileImage))
           .then((newMoment) => mDataAgent.addNewMoment(newMoment));
     } else if (videoFile != null) {
       return mDataAgent
           .uploadFileToFirebase(videoFile)
-          .then((downloadUrl) => craftMomentVO(description, "", downloadUrl))
+          .then((downloadUrl) => craftMomentVO(description, "", downloadUrl, userName, profileImage))
           .then((newMoment) => mDataAgent.addNewMoment(newMoment));
     } else {
-      return craftMomentVO(description, "", "")
+      return craftMomentVO(description, "", "", userName, profileImage)
           .then((newMoment) => mDataAgent.addNewMoment(newMoment));
     }
   }
 
   Future<MomentVO> craftMomentVO(
-      String description, String imageUrl, String videoUrl) {
+      String description, String imageUrl, String videoUrl, String userName, String profileImage) {
     var currentMilliseconds = DateTime.now().millisecondsSinceEpoch;
     var newMoment = MomentVO(
       id: currentMilliseconds,
-      userName: "Nyan Win Naing",
+      userName: userName,
       postImage: imageUrl,
       postVideo: videoUrl,
       description: description,
-      profilePicture:
-          "https://static.wikia.nocookie.net/parody/images/8/8f/Profile_-_Jerry_Mouse_%28Tom_and_Jerry_%282021%29%29.png/revision/latest?cb=20210430032212",
+      profilePicture: profileImage,
     );
     return Future.value(newMoment);
   }

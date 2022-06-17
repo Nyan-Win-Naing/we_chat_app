@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:we_chat_app/data/models/authentication_model.dart';
+import 'package:we_chat_app/data/models/authentication_model_impl.dart';
 import 'package:we_chat_app/data/models/wechat_model.dart';
 import 'package:we_chat_app/data/models/wechat_model_impl.dart';
 import 'package:we_chat_app/data/vos/moment_vo.dart';
@@ -12,8 +14,11 @@ class AddNewPostBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isLoading = false;
 
+  String loggedInUser = "";
+
   /// Models
   final WechatModel _model = WechatModelImpl();
+  final AuthenticationModel _authModel = AuthenticationModelImpl();
 
   String username = "";
   String profilePicture = "";
@@ -31,6 +36,8 @@ class AddNewPostBloc extends ChangeNotifier {
 
 
   AddNewPostBloc({int? momentId}) {
+    loggedInUser = _authModel.getLoggedInUser().id ?? "";
+
     if (momentId != null) {
       isInEditMode = true;
       _prepopulateDataForEditMode(momentId);
@@ -44,10 +51,11 @@ class AddNewPostBloc extends ChangeNotifier {
   }
 
   void _prepopulateDataForAddNewPost() {
-    username = "Nyan Win Naing";
-    profilePicture =
-        "https://static.wikia.nocookie.net/parody/images/8/8f/Profile_-_Jerry_Mouse_%28Tom_and_Jerry_%282021%29%29.png/revision/latest?cb=20210430032212";
-    _notifySafely();
+    _authModel.getUserById(loggedInUser).then((user) {
+      username = user.userName ?? "";
+      profilePicture = user.profilePicture ?? "";
+      _notifySafely();
+    });
   }
 
   Future onTapAddNewPost() {
@@ -99,7 +107,7 @@ class AddNewPostBloc extends ChangeNotifier {
   }
 
   Future<void> _createNewMoment() {
-    return _model.addNewMoment(newPostDescription, chosenImageFile, chosenVideoFile);
+    return _model.addNewMoment(newPostDescription, chosenImageFile, chosenVideoFile, username, profilePicture);
   }
 
   Future<dynamic> _editMoment() {
