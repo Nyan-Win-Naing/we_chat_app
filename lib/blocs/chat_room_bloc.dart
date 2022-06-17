@@ -43,6 +43,7 @@ class ChatRoomBloc extends ChangeNotifier {
     weChatModel.getMessages(loggedInUserId, sentUserId).listen((messages) {
       print("Messages in bloc is $messages...............");
       this.messages = messages;
+      this.messages = List.of((this.messages ?? []).reversed.toList());
       _notifySafely();
     });
   }

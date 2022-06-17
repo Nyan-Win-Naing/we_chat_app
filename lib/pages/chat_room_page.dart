@@ -105,7 +105,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         builder: (context, bloc, child) =>
                         (bloc.messages?.isNotEmpty ?? false)
                             ? ListView.separated(
-                          // reverse: true,
+                          reverse: true,
                           padding: EdgeInsets.only(
                             top: MARGIN_MEDIUM_2,
                             bottom: (!isOpenFunctionView)
@@ -300,9 +300,11 @@ class _ChatTextFieldSectionViewState extends State<ChatTextFieldSectionView> {
                       if (index == 0) {
                         _chooseMediaFromDevice(bloc);
                         isShown = !isShown;
+                        widget.onTap();
                         FocusScope.of(context).requestFocus(fNode);
                       } else if (index == 1) {
                         _takePhotoFromCamera(bloc);
+                        widget.onTap();
                         FocusScope.of(context).requestFocus(fNode);
                         isShown = !isShown;
                       }
@@ -461,7 +463,7 @@ class ChatTextFieldView extends StatelessWidget {
                 onFieldSubmitted: (value) {
                   bloc.onSendMessage(user ?? UserVO());
                   _controller.clear();
-                  onTap();
+
                 },
                 onChanged: (message) {
                   bloc.onMessageChanged(message);
