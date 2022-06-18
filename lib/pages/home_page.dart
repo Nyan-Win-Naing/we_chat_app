@@ -54,8 +54,8 @@ class _HomePageState extends State<HomePage> {
         body: Container(
           child: SingleChildScrollView(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-
                 ChatListView(
                   avatarRadius: avatarRadius,
                   onTapDeleteChat: (chatVo) {
@@ -64,10 +64,20 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                 ),
-                const DividerWithHeightSix(),
-                SizedBox(height: MARGIN_LARGE),
-                const SubscriptionSectionView(),
-                const DividerWithHeightSix(),
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) =>
+                      (bloc.conversationList.isNotEmpty)
+                          ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const DividerWithHeightSix(),
+                                SizedBox(height: MARGIN_LARGE),
+                                const SubscriptionSectionView(),
+                                const DividerWithHeightSix(),
+                              ],
+                            )
+                          : Container(),
+                ),
                 // SizedBox(height: MARGIN_LARGE),
                 // ChatListView(
                 //   avatarRadius: avatarRadius,
@@ -211,8 +221,8 @@ class ChatListView extends StatefulWidget {
 class _ChatListViewState extends State<ChatListView> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeBloc>(
-      builder: (context, bloc, child) {
+    return Consumer<HomeBloc>(builder: (context, bloc, child) {
+      if (bloc.conversationList.isNotEmpty) {
         return ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -220,35 +230,73 @@ class _ChatListViewState extends State<ChatListView> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                _navigateToConversationPage(context, bloc.conversationList[index].userVo);
+                _navigateToConversationPage(
+                    context, bloc.conversationList[index].userVo);
               },
               child: Slidable(
-                key: const ValueKey(0),
-                endActionPane: ActionPane(
-                  motion: ScrollMotion(),
-                  children: [
-                    SlidableAction(
-                      onPressed: (_) {
-                        print("Click Clicksss");
-                        bloc.onTapDeleteConversation(bloc.conversationList[index].conversationId ?? "");
-                      },
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      icon: Icons.delete,
-                      label: CHAT_DELETE_LABEL,
-                    ),
-                  ],
-                ),
-                child:  ConversationItemView(
+                  key: const ValueKey(0),
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) {
+                          print("Click Clicksss");
+                          bloc.onTapDeleteConversation(
+                              bloc.conversationList[index].conversationId ??
+                                  "");
+                        },
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        label: CHAT_DELETE_LABEL,
+                      ),
+                    ],
+                  ),
+                  child: ConversationItemView(
                     avatarRadius: widget.avatarRadius,
                     conversation: bloc.conversationList[index],
-                  )
-              ),
+                  )),
             );
           },
         );
+      } else {
+        return Container(
+          height: 600,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "No conversation history. Send new messages.",
+                  style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 0.3),
+                    fontSize: TEXT_REGULAR,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: MARGIN_MEDIUM),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.create_outlined,
+                      size: MARGIN_XLARGE,
+                      color: Color.fromRGBO(0, 0, 0, 0.3),
+                    ),
+                    SizedBox(width: MARGIN_SMALL),
+                    Icon(
+                      Icons.message,
+                      size: MARGIN_XLARGE,
+                      color: Color.fromRGBO(0, 0, 0, 0.3),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
       }
-    );
+    });
   }
 
   void _navigateToConversationPage(BuildContext context, UserVO? userVo) {
