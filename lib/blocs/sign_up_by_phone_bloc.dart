@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class SignUpByPhoneBloc extends ChangeNotifier {
   /// States
@@ -9,9 +10,34 @@ class SignUpByPhoneBloc extends ChangeNotifier {
   String password = "";
   File? uploadPhoto;
 
+  String countryName = "";
+  String countryCode = "";
+
   bool isDisposed = false;
 
   bool isSignUpError = false;
+
+  SignUpByPhoneBloc({
+    String name = "",
+    String phoneNumber = "",
+    String password = "",
+    File? uploadPhoto,
+    String countryName = "",
+    String countryCode = "",
+  }) {
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.password = password;
+    this.countryName = countryName;
+    this.countryCode = countryCode;
+    this.uploadPhoto = uploadPhoto;
+    _notifySafely();
+  }
+
+  void onTapCountry(String countryName, String countryCode) {
+    this.countryName = countryName;
+    this.countryCode = countryCode;
+  }
 
   void onNameChanged(String name) {
     this.name = name;
@@ -36,12 +62,13 @@ class SignUpByPhoneBloc extends ChangeNotifier {
   }
 
   Future onTapAcceptAndContinue() {
-    if(name.isEmpty || phoneNumber.isEmpty || password.isEmpty) {
+    if (name.isEmpty || phoneNumber.isEmpty || password.isEmpty) {
       isSignUpError = true;
       _notifySafely();
       return Future.error("Error");
     } else {
       isSignUpError = false;
+      phoneNumber = "$countryCode $phoneNumber";
       return Future.value("Success");
     }
   }
@@ -53,7 +80,7 @@ class SignUpByPhoneBloc extends ChangeNotifier {
   }
 
   void _notifySafely() {
-    if(!isDisposed) {
+    if (!isDisposed) {
       notifyListeners();
     }
   }

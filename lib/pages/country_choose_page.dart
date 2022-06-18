@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:we_chat_app/blocs/sign_up_by_phone_bloc.dart';
 import 'package:we_chat_app/dummy/dummy_country_map.dart';
 import 'package:we_chat_app/pages/sign_up_by_phone_page.dart';
 import 'package:we_chat_app/resources/colors.dart';
@@ -8,6 +12,13 @@ import 'package:we_chat_app/viewitems/alphbet_and_countries_list_view.dart';
 import 'package:we_chat_app/viewitems/country_item_view.dart';
 
 class CountryChoosePage extends StatelessWidget {
+  String name;
+  String phoneNumber;
+  String password;
+  File? uploadPhoto;
+
+  CountryChoosePage({required this.name, required this.phoneNumber, required this.password, required this.uploadPhoto});
+
   List<String> beginAlphabetList =
       dummyCountryMap.keys.toList().map((e) => e[0]).toSet().toList();
 
@@ -52,7 +63,7 @@ class CountryChoosePage extends StatelessWidget {
                         alphabet: beginAlphabetList[index],
                         onTap: (String country, String phoneCode) {
                           _navigateToSignUpPageByPhone(
-                              context, country, phoneCode);
+                              context, country, phoneCode, name, phoneNumber, password, uploadPhoto);
                         },
                       );
                     },
@@ -87,13 +98,19 @@ class CountryChoosePage extends StatelessWidget {
     );
   }
 
-  void _navigateToSignUpPageByPhone(
-      BuildContext context, String country, String phoneCode) {
+  void _navigateToSignUpPageByPhone(BuildContext context, String country,
+      String phoneCode, String name, String phoneNumber, String password, File? uploadPhoto) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            SignUpByPhonePage(country: country, phoneCode: phoneCode),
+        builder: (context) => SignUpByPhonePage(
+          country: country,
+          phoneCode: phoneCode,
+          name: name,
+          phoneNumber: phoneNumber,
+          password: password,
+          uploadPhoto: uploadPhoto,
+        ),
       ),
     );
   }

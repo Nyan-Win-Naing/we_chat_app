@@ -11,6 +11,7 @@ class FormFieldView extends StatefulWidget {
     this.isTextField = true,
     this.isPhoneField = false,
     this.isPasswordField = false,
+    this.currentText = "",
     required this.onChanged,
   });
 
@@ -23,12 +24,16 @@ class FormFieldView extends StatefulWidget {
   bool isPasswordField;
   final Function(String) onChanged;
 
+  String currentText;
+
   @override
   State<FormFieldView> createState() => _FormFieldViewState();
 }
 
 class _FormFieldViewState extends State<FormFieldView> {
   bool isFocused = false;
+
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +74,7 @@ class _FormFieldViewState extends State<FormFieldView> {
                         onChanged: (text) {
                           widget.onChanged(text);
                         },
+                        controller: (widget.currentText.isNotEmpty) ? (_controller..text = widget.currentText ..selection = TextSelection.collapsed(offset: _controller.text.length)) : _controller,
                         style: TextStyle(color: Colors.white),
                         keyboardType: widget.isPhoneField ? TextInputType.number : null,
                         obscureText: (widget.isPasswordField) ? true : false,

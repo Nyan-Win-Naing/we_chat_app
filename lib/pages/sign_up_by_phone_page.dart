@@ -20,8 +20,19 @@ import 'package:image_picker/image_picker.dart';
 class SignUpByPhonePage extends StatefulWidget {
   String country;
   String phoneCode;
+  String name;
+  String phoneNumber;
+  String password;
+  File? uploadPhoto;
 
-  SignUpByPhonePage({this.country = "Myanmar", this.phoneCode = "+95"});
+  SignUpByPhonePage({
+    this.country = "Myanmar",
+    this.phoneCode = "+95",
+    this.name = "",
+    this.phoneNumber = "",
+    this.password = "",
+    this.uploadPhoto,
+  });
 
   @override
   State<SignUpByPhonePage> createState() => _SignUpByPhonePageState();
@@ -32,9 +43,19 @@ class _SignUpByPhonePageState extends State<SignUpByPhonePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("Country: ${widget.country}, CountryCode: ${widget.country}, name: ${widget.name}, phoneNumber: ${widget.phoneNumber}, password: ${widget.password}, Upload Photo: ${widget.uploadPhoto}");
+
     final screenWidth = MediaQuery.of(context).size.width;
     return ChangeNotifierProvider(
-      create: (context) => SignUpByPhoneBloc(),
+      create: (context) => SignUpByPhoneBloc(
+        countryName: widget.country,
+        countryCode: widget.phoneCode,
+        name: widget.name,
+        phoneNumber: widget.phoneNumber,
+        password: widget.password,
+        uploadPhoto: widget.uploadPhoto,
+      ),
       child: Scaffold(
         backgroundColor: AUTHENTICATION_PAGE_BACKGROUND_COLOR,
         appBar: AppBar(
@@ -82,9 +103,9 @@ class _SignUpByPhonePageState extends State<SignUpByPhonePage> {
                       bloc
                           .onTapAcceptAndContinue()
                           .then((value) =>
-                          _navigateToPrivacyAndPolicyPage(context, bloc))
+                              _navigateToPrivacyAndPolicyPage(context, bloc))
                           .catchError(
-                            (error) {
+                        (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
@@ -236,19 +257,22 @@ class RegistrationFormsSectionView extends StatelessWidget {
               onChanged: (userName) {
                 bloc.onNameChanged(userName);
               },
+              currentText: bloc.name,
             ),
           ),
           const SizedBox(height: MARGIN_CARD_MEDIUM_2),
-          GestureDetector(
-            onTap: () {
-              _navigateToCountryChoosePage(context);
-            },
-            child: FormFieldView(
-              screenWidth: screenWidth,
-              label: COUNTRY_REGION_FIELD_LABEL,
-              hintText: country,
-              isTextField: false,
-              onChanged: (country) {},
+          Consumer<SignUpByPhoneBloc>(
+            builder: (context, bloc, child) => GestureDetector(
+              onTap: () {
+                _navigateToCountryChoosePage(context, bloc);
+              },
+              child: FormFieldView(
+                screenWidth: screenWidth,
+                label: COUNTRY_REGION_FIELD_LABEL,
+                hintText: bloc.countryName,
+                isTextField: false,
+                onChanged: (country) {},
+              ),
             ),
           ),
           const SizedBox(height: MARGIN_MEDIUM),
@@ -258,10 +282,11 @@ class RegistrationFormsSectionView extends StatelessWidget {
               label: PHONE_FIELD_LABEL_TEXT,
               hintText: PHONE_FIELD_HINT_TEXT,
               isPhoneField: true,
-              phoneCode: phoneCode,
+              phoneCode: bloc.countryCode,
               onChanged: (phoneNumber) {
-                bloc.onPhoneNumberChanged("$phoneCode $phoneNumber");
+                bloc.onPhoneNumberChanged(phoneNumber);
               },
+              currentText: bloc.phoneNumber,
             ),
           ),
           const SizedBox(height: MARGIN_MEDIUM),
@@ -274,6 +299,7 @@ class RegistrationFormsSectionView extends StatelessWidget {
                 bloc.onPasswordChanged(password);
               },
               isPasswordField: true,
+              currentText: bloc.password,
             ),
           ),
         ],
@@ -281,11 +307,21 @@ class RegistrationFormsSectionView extends StatelessWidget {
     );
   }
 
-  void _navigateToCountryChoosePage(BuildContext context) {
+  void _navigateToCountryChoosePage(
+      BuildContext context, SignUpByPhoneBloc bloc) {
+    String name = bloc.name;
+    String phoneNumber = bloc.phoneNumber;
+    String password = bloc.password;
+    File? uploadPhoto = bloc.uploadPhoto;
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CountryChoosePage(),
+        builder: (context) => CountryChoosePage(
+          name: name,
+          phoneNumber: phoneNumber,
+          password: password,
+          uploadPhoto: uploadPhoto,
+        ),
       ),
     );
   }
